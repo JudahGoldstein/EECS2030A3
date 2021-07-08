@@ -47,15 +47,23 @@ public class StudentCodes {
         MultipleListingService record = null;
         try (LineIterator it = FileUtils.lineIterator(mlsFile.getFile(), "UTF-8"))
         {
-            // @todo for students: Modify below and add your cache lookup code ... /////////////////
-            while (it.hasNext()) {
-                String line = it.nextLine();
-                if (line.startsWith(uuid.toString())) {
-                    record = A2Utils.createMLSFromTextRecord(line);
-                    logger.debug(record.toString());
-                    return record;
+            // @todo for students: Modify below and add your cache lookup code ...
+            MultipleListingService RecordInCache = Singleton.getInstance().cacheGet(uuid);
+            if (RecordInCache == null)
+            {
+                while (it.hasNext()) {
+                    String line = it.nextLine();
+                    if (line.startsWith(uuid.toString())) {
+                        record = A2Utils.createMLSFromTextRecord(line);
+                        logger.debug(record.toString());
+                        Singleton.getInstance().cachePut(uuid, record, true);
+                        return record;
+                    }
                 }
-            } //////////////////////////////////////////////////////////////////////////////////////
+            }
+            else if (RecordInCache != null)
+                return RecordInCache;
+
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "MLS record not found");
         }
         catch (IOException e)
