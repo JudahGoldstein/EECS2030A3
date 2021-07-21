@@ -23,12 +23,10 @@ class Characteristic<E> {
     }
 
     /**
-     * @param name name to set the characteristic to
-     * @return characteristic for fluid interfacing
+     * @param name requiered name of Characteristic for constructor
      */
-    public Characteristic<E> setName(String name) {
+    Characteristic(String name){
         this.name = name;
-        return this;
     }
 
     /**
