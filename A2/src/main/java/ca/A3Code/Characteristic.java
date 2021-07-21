@@ -1,5 +1,6 @@
 /**
- * The 
+ * The
+ *
  * @param <E> the data type of the characteristic
  */
 class Characteristic<E> {
@@ -12,8 +13,37 @@ class Characteristic<E> {
         return value;
     }
 
+    /**
+     * @param value value to set the characteristic to
+     * @return characteristic for fluid interfacing
+     */
     public Characteristic<E> setValue(E value) {
         this.value = value;
+        return this;
+    }
+
+    /**
+     * @param name requiered name of Characteristic for constructor
+     */
+    Characteristic(String name){
+        this.name = name;
+    }
+
+    /**
+     * @param min minimum value the characteristic be to be valid
+     * @return characteristic for fluid interfacing
+     */
+    public Characteristic<E> setMin(int min) {
+        this.min = min;
+        return this;
+    }
+
+    /**
+     * @param max maximum value the characteristic be to be valid
+     * @return characteristic for fluid interfacing
+     */
+    public Characteristic<E> setMax(int max) {
+        this.max = max;
         return this;
     }
 
@@ -21,21 +51,11 @@ class Characteristic<E> {
         return name;
     }
 
-    public Characteristic<E> setName(String name) {
-        this.name = name;
-        return this;
-    }
-
-    public Characteristic<E> setMin(int min) {
-        this.min = min;
-        return this;
-    }
-
-    public Characteristic<E> setMax(int max) {
-        this.max = max;
-        return this;
-    }
-
+    /**
+     * validates the value of the charcteristic is between it's minimum and maximum values
+     *
+     * @return whether or not the characteristic is valid.
+     */
     public boolean validate() {
         if (value instanceof String) {
             return ((String) value).length() <= max && ((String) value).length() >= min;
@@ -52,11 +72,18 @@ class Characteristic<E> {
         return false;
     }
 
+    /**
+     * @return string repersentation of (name:value)
+     */
     @Override
     public String toString() {
         return "(" + name + ":" + value + ")";
     }
 
+    /**
+     * @param O object to be compared
+     * @return weather or not the characteristics share a name (given they are both characteristics)
+     */
     @Override
     public boolean equals(Object O) {
         if (O instanceof Characteristic) {
