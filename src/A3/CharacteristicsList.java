@@ -1,17 +1,19 @@
+package A3;
+
 import java.util.ArrayList;
 
 /**
  * A collection of characteristics along with supporting code
  */
 public class CharacteristicsList {
-    int ListingNumber;
-    ArrayList<Characteristic<?>> characteristics = new ArrayList<>();
+    public ArrayList<Characteristic<?>> characteristics = new ArrayList<>();
+    String name;
 
     /**
-     * @param ListingNumber required name of Characteristic for constructor
+     * @param name required name of A3.Characteristic for constructor
      */
-    CharacteristicsList(int ListingNumber) {
-        this.ListingNumber = ListingNumber;
+    CharacteristicsList(String name) {
+        this.name = name;
     }
 
     /**
@@ -63,7 +65,7 @@ public class CharacteristicsList {
      */
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder(ListingNumber+":[");
+        StringBuilder result = new StringBuilder(name+":[");
         for (Characteristic<?> i : characteristics) {
             if (i.getValue() != null) {
                 result.append(i);

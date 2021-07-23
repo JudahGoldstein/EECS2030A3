@@ -1,3 +1,5 @@
+package A3;
+
 /**
  * The
  *
@@ -8,7 +10,7 @@ class Characteristic<E> {
     E value;
 
     /**
-     * @param name required name of Characteristic for constructor
+     * @param name required name of A3.Characteristic for constructor
      */
     Characteristic(String name,E value){
         this.name = name;
