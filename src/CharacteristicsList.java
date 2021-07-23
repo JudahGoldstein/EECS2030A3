@@ -3,26 +3,22 @@ import java.util.ArrayList;
 /**
  * A collection of characteristics along with supporting code
  */
-public class Type {
-    ArrayList<Characteristic<?>> characteristics = new ArrayList<>(); //array of characteristics that make up the Type
-    String name;
+public class CharacteristicsList {
+    int ListingNumber;
+    ArrayList<Characteristic<?>> characteristics = new ArrayList<>();
 
     /**
-     * @param name requiered name of Characteristic for constructor
+     * @param ListingNumber required name of Characteristic for constructor
      */
-    Type(String name) {
-        this.name = name;
-    }
-
-    public String getName() {
-        return name;
+    CharacteristicsList(int ListingNumber) {
+        this.ListingNumber = ListingNumber;
     }
 
     /**
      * @param c characteristic to be added, will only add it if it has a unique name not in the set already
      * @return Type for fluid interface
      */
-    public Type add(Characteristic<?> c) {
+    public CharacteristicsList add(Characteristic<?> c) {
         for (Characteristic<?> i : characteristics) {
             if (c.equals(i)) {
                 return this;
@@ -34,18 +30,6 @@ public class Type {
 
     public void remove(Characteristic<?> c) {
         characteristics.remove(c);
-    }
-
-    /**
-     * @return whether or not the Type is valid, i.e. all the characterisitics therein are valid.
-     */
-    public boolean validate() {
-        for (Characteristic<?> i : characteristics) {
-            if (!i.validate()) {
-                return false;
-            }
-        }
-        return true;
     }
 
     public ArrayList<Characteristic<?>> getCharacteristics() {
@@ -66,10 +50,10 @@ public class Type {
     }
 
     /**
-     * used to the characteristics of another type into this one. useful for cases such as premaking types that can be applied to multiple types of buildings/structures
+     * used to copy characteristics of from another type into this one. useful for cases such as premaking types that can be applied to multiple types of buildings/structures
      * @param t the Type that all the characteristics will be cloned from
      */
-    void addType(Type t) {
+    void copyList(CharacteristicsList t) {
         characteristics.addAll(t.characteristics);
     }
 
@@ -79,7 +63,7 @@ public class Type {
      */
     @Override
     public String toString() {
-        StringBuilder result = new StringBuilder(name + ":[");
+        StringBuilder result = new StringBuilder(ListingNumber+":[");
         for (Characteristic<?> i : characteristics) {
             if (i.getValue() != null) {
                 result.append(i);
