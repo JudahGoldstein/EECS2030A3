@@ -6,6 +6,6 @@ import org.junit.jupiter.api.Test;
 class A3ApplicationTests {
     @Test
     void Land(){
-       
+
     }
 }
