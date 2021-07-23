@@ -59,6 +59,9 @@ public abstract class Blueprints extends CharacteristicsList {
 }
 
 class House extends Blueprints {
+    /**
+     * variables the builder will use
+     */
     String streetAddress, city, provinceOrState;
     Double listingPrice, commission, taxes, squareFootage;
     Boolean attic, basement;
@@ -145,6 +148,9 @@ class House extends Blueprints {
 }
 
 class apartmentComplex extends House {
+    /**
+     * extra variable the builder will use not included in house
+     */
     Boolean roofAccess;
 
     /**
@@ -183,6 +189,11 @@ class apartmentComplex extends House {
         characteristics.add(new Characteristic<>(name + "-complex-has-basement", basement));
     }
 
+    /**
+     * runs the methods from the superclass with the variables set by the user, final because we do not want subclasses to inherit it
+     *
+     * @return clean characteristic list made by the superclass build function
+     */
     final CharacteristicsList buildApartmentComplex() {
         location(streetAddress, city, provinceOrState);
         pricing(listingPrice, commission, taxes);
