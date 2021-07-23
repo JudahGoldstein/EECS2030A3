@@ -14,6 +14,11 @@ public abstract class Blueprints extends CharacteristicsList {
         cleanCharacteristics = new CharacteristicsList(name);
     }
 
+    /**
+     * method that cleans up the working characteristic list
+     *
+     * @return characteristic list purged of all null values
+     */
     CharacteristicsList build() {
         for (Characteristic<?> i : characteristics) {
             if (i.getValue() != null) {
@@ -23,6 +28,9 @@ public abstract class Blueprints extends CharacteristicsList {
         return cleanCharacteristics;
     }
 
+    /**
+     * these methods are "blueprints" that subclasses can make use of
+     */
     void location(String streetAddress, String city, String provinceOrState) {
         characteristics.add(new Characteristic<>(name + "-street-address", streetAddress));
         characteristics.add(new Characteristic<>(name + "-city", city));
@@ -63,6 +71,9 @@ class House extends Blueprints {
         super(name);
     }
 
+    /**
+     * setters to set the variables the builder will use
+     */
     public void setStreetAddress(String streetAddress) {
         this.streetAddress = streetAddress;
     }
@@ -119,7 +130,11 @@ class House extends Blueprints {
         this.constructionYear = constructionYear;
     }
 
-
+    /**
+     * runs the methods from the superclass with the variables set by the user, final because we do not want subclasses to inherit it
+     *
+     * @return clean characteristic list made by the superclass build function
+     */
     final CharacteristicsList buildHouse() {
         location(streetAddress, city, provinceOrState);
         pricing(listingPrice, commission, taxes);
@@ -129,8 +144,9 @@ class House extends Blueprints {
     }
 }
 
-class apartmentComplex extends House{
+class apartmentComplex extends House {
     Boolean roofAccess;
+
     /**
      * @param name required name of A3.Characteristic for constructor
      */
@@ -138,21 +154,32 @@ class apartmentComplex extends House{
         super(name);
     }
 
+    /**
+     * setter for roofAccess
+     *
+     * @param roofAccess weather or not the apartment complex has roof access
+     */
     public void setRoofAccess(Boolean roofAccess) {
         this.roofAccess = roofAccess;
     }
 
+    /**
+     * roof access replaces attic in apartment complex, rather than make a whole new blueprint for this small change we can throw an exception if someone accidentally tries to set it.
+     */
     @Override
     public void setAttic(boolean attic) {
         throw new UnsupportedOperationException();
     }
 
+    /**
+     * @param roofAccess replaces attic
+     */
     @Override
     void residentialRooms(int bedrooms, int bathrooms, int kitchens, Boolean roofAccess, Boolean basement) {
         characteristics.add(new Characteristic<>(name + "-bedrooms-per-unit", bedrooms));
         characteristics.add(new Characteristic<>(name + "-bathrooms-per-unit", bathrooms));
         characteristics.add(new Characteristic<>(name + "-kitchens-per-unit", kitchens));
-        characteristics.add(new Characteristic<>(name + "-roof-access", attic));
+        characteristics.add(new Characteristic<>(name + "-roof-access", roofAccess));
         characteristics.add(new Characteristic<>(name + "-complex-has-basement", basement));
     }
 
@@ -160,7 +187,7 @@ class apartmentComplex extends House{
         location(streetAddress, city, provinceOrState);
         pricing(listingPrice, commission, taxes);
         building(squareFootage, floors, constructionYear);
-        residentialRooms(bedrooms, bathrooms, kitchens, null, null);
+        residentialRooms(bedrooms, bathrooms, kitchens, roofAccess, basement);
         return build();
     }
 }
