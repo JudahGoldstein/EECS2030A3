@@ -35,47 +35,47 @@ public abstract class Blueprints extends CharacteristicsList {
      * these methods are "blueprints" that subclasses can make use of
      */
     void defaultAttributes(String address, double price, ListingCategory listingType, boolean isFreehold, String description) {
-        super.add(new Characteristic<>(name + "-Address", address));
-        super.add(new Characteristic<>(name + "-Price", price));
-        super.add(new Characteristic<>(name + "-ListingType", listingType));
-        super.add(new Characteristic<>(name + "-IsFreehold", isFreehold));
-        super.add(new Characteristic<>(name + "-Description", description));
+        super.add(new Characteristic<>(super.getName() + "-Address", address));
+        super.add(new Characteristic<>(super.getName() + "-Price", price));
+        super.add(new Characteristic<>(super.getName() + "-ListingType", listingType));
+        super.add(new Characteristic<>(super.getName() + "-IsFreehold", isFreehold));
+        super.add(new Characteristic<>(super.getName() + "-Description", description));
     }
 
     void landAttributes(UUID landId, EnumSet<Zoning> zone, double lotSize) {
-        super.add(new Characteristic<>(name + "-LandId", landId));
-        super.add(new Characteristic<>(name + "-Zoning", zone));
-        super.add(new Characteristic<>(name + "-LotSize", lotSize));
+        super.add(new Characteristic<>(super.getName() + "-LandId", landId));
+        super.add(new Characteristic<>(super.getName() + "-Zoning", zone));
+        super.add(new Characteristic<>(super.getName() + "-LotSize", lotSize));
     }
 
     void structureAttributes(boolean canMove, boolean isNewConstruct, DetachedType isDetached) {
-        super.add(new Characteristic<>(name + "-Movable", canMove));
-        super.add(new Characteristic<>(name + "-NewConstruction", isNewConstruct));
-        super.add(new Characteristic<>(name + "-DetachedType", isDetached));
+        super.add(new Characteristic<>(super.getName() + "-Movable", canMove));
+        super.add(new Characteristic<>(super.getName() + "-NewConstruction", isNewConstruct));
+        super.add(new Characteristic<>(super.getName() + "-DetachedType", isDetached));
     }
 
     void livingUnitAttributes(boolean isCoOp, boolean isMultiFam, boolean isMultiGen) {
-        super.add(new Characteristic<>(name + "-IsCoOpHousing", isCoOp));
-        super.add(new Characteristic<>(name + "-MultiFamilyType", isMultiFam));
-        super.add(new Characteristic<>(name + "-IsMultiGen", isMultiGen));
+        super.add(new Characteristic<>(super.getName() + "-IsCoOpHousing", isCoOp));
+        super.add(new Characteristic<>(super.getName() + "-MultiFamilyType", isMultiFam));
+        super.add(new Characteristic<>(super.getName() + "-IsMultiGen", isMultiGen));
     }
 
     void typicalResidentialAttributes(double squareFootage, int floors, int constructionYear, int roomCount, int bedrooms, int bathrooms, int kitchens, boolean basement, boolean deck) {
-        super.add(new Characteristic<>(name + "-LivingArea", squareFootage));
-        super.add(new Characteristic<>(name + "-Floors", floors));
-        super.add(new Characteristic<>(name + "-YearConstructed", constructionYear));
-        super.add(new Characteristic<>(name + "-RoomCount", roomCount));
-        super.add(new Characteristic<>(name + "-NumBedrooms", bedrooms));
-        super.add(new Characteristic<>(name + "-NumBathrooms", bathrooms));
-        super.add(new Characteristic<>(name + "-NumKitchens", kitchens));
-        super.add(new Characteristic<>(name + "-HasBasement", basement));
-        super.add(new Characteristic<>(name + "-HasDeck", deck));
+        super.add(new Characteristic<>(super.getName() + "-LivingArea", squareFootage));
+        super.add(new Characteristic<>(super.getName() + "-Floors", floors));
+        super.add(new Characteristic<>(super.getName() + "-YearConstructed", constructionYear));
+        super.add(new Characteristic<>(super.getName() + "-RoomCount", roomCount));
+        super.add(new Characteristic<>(super.getName() + "-NumBedrooms", bedrooms));
+        super.add(new Characteristic<>(super.getName() + "-NumBathrooms", bathrooms));
+        super.add(new Characteristic<>(super.getName() + "-NumKitchens", kitchens));
+        super.add(new Characteristic<>(super.getName() + "-HasBasement", basement));
+        super.add(new Characteristic<>(super.getName() + "-HasDeck", deck));
     }
 
     void houseAttributes(boolean attic, boolean garden, boolean lawn) {
-        super.add(new Characteristic<>(name + "-HasAttic", attic));
-        super.add(new Characteristic<>(name + "-HasGarden", garden));
-        super.add(new Characteristic<>(name + "-HasLawn", lawn));
+        super.add(new Characteristic<>(super.getName() + "-HasAttic", attic));
+        super.add(new Characteristic<>(super.getName() + "-HasGarden", garden));
+        super.add(new Characteristic<>(super.getName() + "-HasLawn", lawn));
     }
 }
 
