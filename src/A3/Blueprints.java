@@ -1,10 +1,13 @@
 package A3;
 
+import java.util.EnumSet;
+import java.util.UUID;
+
 /**
  * Blueprints is an abstract utility class which holds pre-made methods to build characteristics used by multiple aspects of an MLS record
  */
 public abstract class Blueprints extends CharacteristicsList {
-    CharacteristicsList cleanCharacteristics;
+    private CharacteristicsList cleanCharacteristics;
 
     /**
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
@@ -20,7 +23,7 @@ public abstract class Blueprints extends CharacteristicsList {
      * @return characteristic list purged of all null values
      */
     CharacteristicsList build() {
-        for (Characteristic<?> i : characteristics) {
+        for (Characteristic<?> i : super.getCharacteristics()) {
             if (i.getValue() != null) {
                 cleanCharacteristics.add(i);
             }
@@ -31,78 +34,116 @@ public abstract class Blueprints extends CharacteristicsList {
     /**
      * these methods are "blueprints" that subclasses can make use of
      */
-    void location(String streetAddress, String city, String provinceOrState) {
-        characteristics.add(new Characteristic<>(name + "-street-address", streetAddress));
-        characteristics.add(new Characteristic<>(name + "-city", city));
-        characteristics.add(new Characteristic<>(name + "-province-or-state", provinceOrState));
+    void defaultAttributes(String address, double price, ListingCategory listingType, boolean isFreehold, String description) {
+        super.add(new Characteristic<>(name + "-Address", address));
+        super.add(new Characteristic<>(name + "-Price", price));
+        super.add(new Characteristic<>(name + "-ListingType", listingType));
+        super.add(new Characteristic<>(name + "-IsFreehold", isFreehold));
+        super.add(new Characteristic<>(name + "-Description", description));
     }
 
-    void pricing(Double listingPrice, Double commission, Double taxes) {
-        characteristics.add(new Characteristic<>(name + "-listing-price", listingPrice));
-        characteristics.add(new Characteristic<>(name + "-commission", commission));
-        characteristics.add(new Characteristic<>(name + "-taxes", taxes));
+    void landAttributes(UUID landId, EnumSet<Zoning> zone, double lotSize) {
+        super.add(new Characteristic<>(name + "-LandId", landId));
+        super.add(new Characteristic<>(name + "-Zoning", zone));
+        super.add(new Characteristic<>(name + "-LotSize", lotSize));
     }
 
-    void building(Double squareFootage, int floors, int constructionYear) {
-        characteristics.add(new Characteristic<>(name + "-square-footage", squareFootage));
-        characteristics.add(new Characteristic<>(name + "-floors", floors));
-        characteristics.add(new Characteristic<>(name + "-construction-year", constructionYear));
+    void structureAttributes(boolean canMove, boolean isNewConstruct, DetachedType isDetached) {
+        super.add(new Characteristic<>(name + "-Movable", canMove));
+        super.add(new Characteristic<>(name + "-NewConstruction", isNewConstruct));
+        super.add(new Characteristic<>(name + "-DetachedType", isDetached));
     }
 
-    void residentialRooms(int bedrooms, int bathrooms, int kitchens, Boolean attic, Boolean basement) {
-        characteristics.add(new Characteristic<>(name + "-bedrooms", bedrooms));
-        characteristics.add(new Characteristic<>(name + "-bathrooms", bathrooms));
-        characteristics.add(new Characteristic<>(name + "-kitchens", kitchens));
-        characteristics.add(new Characteristic<>(name + "-has-attic", attic));
-        characteristics.add(new Characteristic<>(name + "-has-basement", basement));
+    void livingUnitAttributes(boolean isCoOp, boolean isMultiFam, boolean isMultiGen) {
+        super.add(new Characteristic<>(name + "-IsCoOpHousing", isCoOp));
+        super.add(new Characteristic<>(name + "-MultiFamilyType", isMultiFam));
+        super.add(new Characteristic<>(name + "-IsMultiGen", isMultiGen));
+    }
+
+    void typicalResidentialAttributes(double squareFootage, int floors, int constructionYear, int roomCount, int bedrooms, int bathrooms, int kitchens, boolean basement, boolean deck) {
+        super.add(new Characteristic<>(name + "-LivingArea", squareFootage));
+        super.add(new Characteristic<>(name + "-Floors", floors));
+        super.add(new Characteristic<>(name + "-YearConstructed", constructionYear));
+        super.add(new Characteristic<>(name + "-RoomCount", roomCount));
+        super.add(new Characteristic<>(name + "-NumBedrooms", bedrooms));
+        super.add(new Characteristic<>(name + "-NumBathrooms", bathrooms));
+        super.add(new Characteristic<>(name + "-NumKitchens", kitchens));
+        super.add(new Characteristic<>(name + "-HasBasement", basement));
+        super.add(new Characteristic<>(name + "-HasDeck", deck));
+    }
+
+    void houseAttributes(boolean attic, boolean garden, boolean lawn) {
+        super.add(new Characteristic<>(name + "-HasAttic", attic));
+        super.add(new Characteristic<>(name + "-HasGarden", garden));
+        super.add(new Characteristic<>(name + "-HasLawn", lawn));
     }
 }
 
-class House extends Blueprints {
+class BuiltBlueprint extends Blueprints {
     /**
      * variables the builder will use
      */
-    String streetAddress, city, provinceOrState;
-    Double listingPrice, commission, taxes, squareFootage;
-    Boolean attic, basement;
-    int bedrooms, bathrooms, kitchens, floors, constructionYear;
+    String address, description;
+    double price, lotSize, squareFootage;
+    boolean isFreehold, canMove, isNewConstruct, isCoOp, isMultiFam, isMultiGen, attic, basement, deck, garden, lawn;
+    int bedrooms, bathrooms, kitchens, floors, constructionYear, roomCount;
+    UUID landId;
+    EnumSet<Zoning> zone;
+    DetachedType isDetached;
+    ListingCategory listingType;
 
     /**
      * @param name required name of A3.Characteristic for constructor
      */
-    House(String name) {
+    BuiltBlueprint(String name) {
         super(name);
     }
 
     /**
      * setters to set the variables the builder will use
      */
-    public void setStreetAddress(String streetAddress) {
-        this.streetAddress = streetAddress;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
-    public void setCity(String city) {
-        this.city = city;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
-    public void setProvinceOrState(String provinceOrState) {
-        this.provinceOrState = provinceOrState;
+    public void setPrice(double price) {
+        this.price = price;
     }
 
-    public void setListingPrice(Double listingPrice) {
-        this.listingPrice = listingPrice;
+    public void setLotSize(double lotSize) {
+        this.lotSize = lotSize;
     }
 
-    public void setCommission(Double commission) {
-        this.commission = commission;
-    }
-
-    public void setTaxes(Double taxes) {
-        this.taxes = taxes;
-    }
-
-    public void setSquareFootage(Double squareFootage) {
+    public void setSquareFootage(double squareFootage) {
         this.squareFootage = squareFootage;
+    }
+
+    public void setFreehold(boolean freehold) {
+        isFreehold = freehold;
+    }
+
+    public void setCanMove(boolean canMove) {
+        this.canMove = canMove;
+    }
+
+    public void setNewConstruct(boolean newConstruct) {
+        isNewConstruct = newConstruct;
+    }
+
+    public void setCoOp(boolean coOp) {
+        isCoOp = coOp;
+    }
+
+    public void setMultiFam(boolean multiFam) {
+        isMultiFam = multiFam;
+    }
+
+    public void setMultiGen(boolean multiGen) {
+        isMultiGen = multiGen;
     }
 
     public void setAttic(boolean attic) {
@@ -111,6 +152,10 @@ class House extends Blueprints {
 
     public void setBasement(boolean basement) {
         this.basement = basement;
+    }
+
+    public void setDeck(boolean deck) {
+        this.deck = deck;
     }
 
     public void setBedrooms(int bedrooms) {
@@ -133,60 +178,32 @@ class House extends Blueprints {
         this.constructionYear = constructionYear;
     }
 
-    /**
-     * runs the methods from the superclass with the variables set by the user, final because we do not want subclasses to inherit it
-     *
-     * @return clean characteristic list made by the superclass build function
-     */
-    final CharacteristicsList buildHouse() {
-        location(streetAddress, city, provinceOrState);
-        pricing(listingPrice, commission, taxes);
-        building(squareFootage, floors, constructionYear);
-        residentialRooms(bedrooms, bathrooms, kitchens, attic, basement);
-        return build();
-    }
-}
-
-class apartmentComplex extends House {
-    /**
-     * extra variable the builder will use not included in house
-     */
-    Boolean roofAccess;
-
-    /**
-     * @param name required name of A3.Characteristic for constructor
-     */
-    apartmentComplex(String name) {
-        super(name);
+    public void setRoomCount(int roomCount) {
+        this.roomCount = roomCount;
     }
 
-    /**
-     * setter for roofAccess
-     *
-     * @param roofAccess weather or not the apartment complex has roof access
-     */
-    public void setRoofAccess(Boolean roofAccess) {
-        this.roofAccess = roofAccess;
+    public void setLandId(UUID landId) {
+        this.landId = landId;
     }
 
-    /**
-     * roof access replaces attic in apartment complex, rather than make a whole new blueprint for this small change we can throw an exception if someone accidentally tries to set it.
-     */
-    @Override
-    public void setAttic(boolean attic) {
-        throw new UnsupportedOperationException();
+    public void setZone(EnumSet<Zoning> zone) {
+        this.zone = zone;
     }
 
-    /**
-     * @param roofAccess replaces attic
-     */
-    @Override
-    void residentialRooms(int bedrooms, int bathrooms, int kitchens, Boolean roofAccess, Boolean basement) {
-        characteristics.add(new Characteristic<>(name + "-bedrooms-per-unit", bedrooms));
-        characteristics.add(new Characteristic<>(name + "-bathrooms-per-unit", bathrooms));
-        characteristics.add(new Characteristic<>(name + "-kitchens-per-unit", kitchens));
-        characteristics.add(new Characteristic<>(name + "-roof-access", roofAccess));
-        characteristics.add(new Characteristic<>(name + "-complex-has-basement", basement));
+    public void setIsDetached(DetachedType isDetached) {
+        this.isDetached = isDetached;
+    }
+
+    public void setListingType(ListingCategory listingType) {
+        this.listingType = listingType;
+    }
+
+    public void setGarden(boolean garden) {
+        this.garden = garden;
+    }
+
+    public void setLawn(boolean lawn) {
+        this.lawn = lawn;
     }
 
     /**
@@ -194,11 +211,13 @@ class apartmentComplex extends House {
      *
      * @return clean characteristic list made by the superclass build function
      */
-    final CharacteristicsList buildApartmentComplex() {
-        location(streetAddress, city, provinceOrState);
-        pricing(listingPrice, commission, taxes);
-        building(squareFootage, floors, constructionYear);
-        residentialRooms(bedrooms, bathrooms, kitchens, roofAccess, basement);
+    final CharacteristicsList buildBlueprint() {
+        defaultAttributes(address, price, listingType, isFreehold, description);
+        landAttributes(landId, zone, lotSize);
+        structureAttributes(canMove, isNewConstruct, isDetached);
+        livingUnitAttributes(isCoOp, isMultiFam, isMultiGen);
+        typicalResidentialAttributes(squareFootage, floors, constructionYear, roomCount, bedrooms, bathrooms, kitchens, basement, deck);
+        houseAttributes(attic, garden, lawn);
         return build();
     }
 }

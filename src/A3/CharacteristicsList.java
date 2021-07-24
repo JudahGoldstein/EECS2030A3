@@ -6,8 +6,8 @@ import java.util.ArrayList;
  * A collection of characteristics along with supporting code
  */
 public class CharacteristicsList {
-    public ArrayList<Characteristic<?>> characteristics = new ArrayList<>();
-    String name;
+    private ArrayList<Characteristic<?>> characteristics = new ArrayList<>();
+    private String name;
 
     /**
      * @param name required name of A3.Characteristic for constructor
