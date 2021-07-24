@@ -8,6 +8,7 @@ import java.util.ArrayList;
 public class CharacteristicsList {
     private ArrayList<Characteristic<?>> characteristics = new ArrayList<>();
     private String name;
+    public static final int MAX_LIST_SIZE = 1000;
 
     /**
      * @param name required name of A3.Characteristic for constructor
@@ -24,15 +25,18 @@ public class CharacteristicsList {
      * @return Type for fluid interface
      */
     public CharacteristicsList add(Characteristic<?> c) {
-        for (Characteristic<?> i : characteristics) {
-            if (c.equals(i)) {
-                int ind = characteristics.indexOf(i);
-                this.remove(i);
-                characteristics.add(ind, c); // take advantage of method overload in ArrayList
-                return this;
+        if (characteristics.size() < MAX_LIST_SIZE) {
+            for (Characteristic<?> i : characteristics) {
+                if (c.equals(i)) {
+                    int ind = characteristics.indexOf(i);
+                    this.remove(i);
+                    characteristics.add(ind, c); // take advantage of method overload in ArrayList
+                    return this;
+                }
             }
+            characteristics.add(c);
+            return this;
         }
-        characteristics.add(c);
         return this;
     }
 
