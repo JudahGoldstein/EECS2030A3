@@ -34,6 +34,16 @@ public abstract class Blueprints extends CharacteristicsList {
     /**
      * these methods are "blueprints" that subclasses can make use of
      */
+
+    /**
+     * Default attributes that the Property class should have
+     *
+     * @param address       A String containing the Property's address
+     * @param price         The listing price
+     * @param listingType   What kind of listing this is: Purchase, Lease, or Rent
+     * @param isFreehold    Whether or not the Property is deeded as freehold
+     * @param description   A description of the Property
+     */
     void defaultAttributes(String address, double price, ListingCategory listingType, boolean isFreehold, String description) {
         super.add(new Characteristic<>(super.getName() + "-Address", address));
         super.add(new Characteristic<>(super.getName() + "-Price", price));
@@ -42,24 +52,58 @@ public abstract class Blueprints extends CharacteristicsList {
         super.add(new Characteristic<>(super.getName() + "-Description", description));
     }
 
+    /**
+     * Attributes that Land should have
+     *
+     * @param landId    A UUID identifying the parcel of land
+     * @param zone      The zone type(s) that apply to the land
+     * @param lotSize   The size of the land
+     */
     void landAttributes(UUID landId, EnumSet<Zoning> zone, double lotSize) {
         super.add(new Characteristic<>(super.getName() + "-LandId", landId));
         super.add(new Characteristic<>(super.getName() + "-Zoning", zone));
         super.add(new Characteristic<>(super.getName() + "-LotSize", lotSize));
     }
 
+    /**
+     * Attributes that a Structure should have
+     *
+     * @param canMove           Whether or not the structure can be moved
+     * @param isNewConstruct    Whether or not the structure is newly constructed
+     * @param isDetached        The type of detachment the house may have: Detached, Semi-Detached, or Undetached
+     */
     void structureAttributes(boolean canMove, boolean isNewConstruct, DetachedType isDetached) {
         super.add(new Characteristic<>(super.getName() + "-Movable", canMove));
         super.add(new Characteristic<>(super.getName() + "-NewConstruction", isNewConstruct));
         super.add(new Characteristic<>(super.getName() + "-DetachedType", isDetached));
     }
 
+    /**
+     * Attributes that a LivingUnit should have
+     *
+     * @param isCoOp        Whether or not the LivingUnit is co-operative housing
+     * @param isMultiFam    Whether or not the LivingUnit is a multi-family home
+     * @param isMultiGen    Whether or not the LivingUnit is a multi-generational home
+     */
     void livingUnitAttributes(boolean isCoOp, boolean isMultiFam, boolean isMultiGen) {
         super.add(new Characteristic<>(super.getName() + "-IsCoOpHousing", isCoOp));
         super.add(new Characteristic<>(super.getName() + "-MultiFamilyType", isMultiFam));
         super.add(new Characteristic<>(super.getName() + "-IsMultiGen", isMultiGen));
     }
 
+    /**
+     * Typical attributes that a LivingUnit could have
+     *
+     * @param squareFootage     The amount of floor space in the unit
+     * @param floors            The number of floors in the unit
+     * @param constructionYear  The year the unit was constructed
+     * @param roomCount         The number of rooms in the unit
+     * @param bedrooms          The number of bedrooms in the unit
+     * @param bathrooms         The number of bathrooms in the unit
+     * @param kitchens          The number of kitchens in the unit
+     * @param basement          Whether or not the unit has a basement
+     * @param deck              Whether or not the unit has a deck
+     */
     void typicalResidentialAttributes(double squareFootage, int floors, int constructionYear, int roomCount, int bedrooms, int bathrooms, int kitchens, boolean basement, boolean deck) {
         super.add(new Characteristic<>(super.getName() + "-LivingArea", squareFootage));
         super.add(new Characteristic<>(super.getName() + "-Floors", floors));
@@ -72,16 +116,30 @@ public abstract class Blueprints extends CharacteristicsList {
         super.add(new Characteristic<>(super.getName() + "-HasDeck", deck));
     }
 
+    /**
+     * Typical attributes that a House could have
+     * @param attic     Whether or not the house has an attic
+     * @param garden    Whether or not the house has a garden
+     * @param lawn      Whether or not the house has a lawn
+     */
     void houseAttributes(boolean attic, boolean garden, boolean lawn) {
         super.add(new Characteristic<>(super.getName() + "-HasAttic", attic));
         super.add(new Characteristic<>(super.getName() + "-HasGarden", garden));
         super.add(new Characteristic<>(super.getName() + "-HasLawn", lawn));
     }
 
+    /**
+     * Attributes that a parking space should have
+     * @param numParking number of parking spaces
+     */
     void parkingAttribute(int numParking) {
         super.add(new Characteristic<>(super.getName() + "-NumParkingSpaces", numParking));
     }
 
+    /**
+     * Attributes that a storage locker should have
+     * @param size the size of the locker
+     */
     void lockerAttribute(double size) {
         super.add(new Characteristic<>(super.getName() + "-LockerSize", size));
     }

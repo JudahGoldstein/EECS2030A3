@@ -42,14 +42,30 @@ public class MlsDatabase {
         return instance;
     }
 
+    /**
+     * Get the MLS Database collection disclaimer
+     *
+     * @return Collection Disclaimer
+     */
     public static String getCollectionDisclaimer() {
         return CollectionDisclaimer;
     }
 
+    /**
+     * Set the MLS Database collection disclaimer
+     *
+     * @param CollectionDisclaimer collection disclaimer to be stored
+     */
     public static void setCollectionDisclaimer(String CollectionDisclaimer) {
         MlsDatabase.CollectionDisclaimer = CollectionDisclaimer;
     }
 
+    /**
+     * Find an MLS Record based on its UUID
+     *
+     * @param uuid the UUID to look up
+     * @return the MLSRecord corresponding to that UUID
+     */
     public MlsRecord searchDatabase(UUID uuid) {
         return MlsDatabase.database.get(uuid);
     }

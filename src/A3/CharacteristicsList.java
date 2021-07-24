@@ -25,18 +25,19 @@ public class CharacteristicsList {
      * @return Type for fluid interface
      */
     public CharacteristicsList add(Characteristic<?> c) {
-        if (characteristics.size() < MAX_LIST_SIZE) {
-            for (Characteristic<?> i : characteristics) {
-                if (c.equals(i)) {
-                    int ind = characteristics.indexOf(i);
-                    this.remove(i);
-                    characteristics.add(ind, c); // take advantage of method overload in ArrayList
-                    return this;
+
+        for (Characteristic<?> i : characteristics) {
+            if (c.equals(i)) {
+                int ind = characteristics.indexOf(i);
+                this.remove(i);
+                characteristics.add(ind, c); // take advantage of method overload in ArrayList
+                return this;
                 }
             }
-            characteristics.add(c);
-            return this;
-        }
+            if (characteristics.size() < MAX_LIST_SIZE) {
+                characteristics.add(c);
+                return this;
+            }
         return this;
     }
 
@@ -58,17 +59,34 @@ public class CharacteristicsList {
         return this;
     }
 
+    /**
+     * Remove a record in the characteristics list.
+     *
+     * @param c characteristic to be removed
+     */
     public void remove(Characteristic<?> c) {
         characteristics.remove(c);
     }
 
+    /**
+     * Get the name associated with the CharacteristicsList
+     * @return the name associated with the CharacteristicsList
+     */
     public String getName() { return this.name; }
 
+    /**
+     * Get an ArrayList containing all of the characteristics
+     * This is a shallow copy of the class' Arraylist
+     *
+     * @return a shallow copy of the class' Arraylist
+     */
     public ArrayList<Characteristic<?>> getCharacteristics() {
         return new ArrayList<Characteristic<?>>(this.characteristics);
     }
 
     /**
+     * Get a particular Characteristic using the name associated with it
+     *
      * @param name name of characteristic to look for
      * @return characteristic with name if found, otherwise null
      */

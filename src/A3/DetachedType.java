@@ -1,11 +1,10 @@
 package A3;
 
 public enum DetachedType {
-    // duplex, triplex, quadplex
     DETACHED("Detached"),
     SEMI_DETACHED("Semi-Detached"),
     NOT_DETACHED("Not Detatched"),
-    DEFAULT(DETACHED);
+    DEFAULT(DETACHED); // assume detached by default
 
     private String description;
 

@@ -17,10 +17,18 @@ class Characteristic<E> {
         this.value=value;
     }
 
+    /**
+     * Get the name associated with the Characteristic
+     * @return the name associated with the Characteristic
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Get the value of the Characteristic
+     * @return the value of the Characteristic
+     */
     public E getValue() {
         return value;
     }
