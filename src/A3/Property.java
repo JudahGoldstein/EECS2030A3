@@ -118,16 +118,14 @@ class ImmobileStructure extends Structure {
 }
 
 class ParkingSpace extends ImmobileStructure {
-    public ParkingSpace (String name, CharacteristicsList characteristics, int numParkingSpaces) {
+    public ParkingSpace (String name, CharacteristicsList characteristics) {
         super(name, characteristics);
-        super.getCharacteristics().add(new Characteristic<>(super.getName() + "-NumParkingSpaces", numParkingSpaces));
     }
 }
 
 class Locker extends ImmobileStructure {
-    public Locker (String name, CharacteristicsList characteristics, double size) {
+    public Locker (String name, CharacteristicsList characteristics) {
         super(name, characteristics);
-        super.getCharacteristics().add(new Characteristic<>(super.getName() + "-LockerSize", size));
     }
 }
 

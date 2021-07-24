@@ -77,6 +77,14 @@ public abstract class Blueprints extends CharacteristicsList {
         super.add(new Characteristic<>(super.getName() + "-HasGarden", garden));
         super.add(new Characteristic<>(super.getName() + "-HasLawn", lawn));
     }
+
+    void parkingAttribute(int numParking) {
+        super.add(new Characteristic<>(super.getName() + "-NumParkingSpaces", numParking));
+    }
+
+    void lockerAttribute(double size) {
+        super.add(new Characteristic<>(super.getName() + "-LockerSize", size));
+    }
 }
 
 class BuiltBlueprint extends Blueprints {
@@ -84,9 +92,9 @@ class BuiltBlueprint extends Blueprints {
      * variables the builder will use
      */
     String address, description;
-    double price, lotSize, squareFootage;
+    double price, lotSize, squareFootage, size;
     boolean isFreehold, canMove, isNewConstruct, isCoOp, isMultiFam, isMultiGen, attic, basement, deck, garden, lawn;
-    int bedrooms, bathrooms, kitchens, floors, constructionYear, roomCount;
+    int bedrooms, bathrooms, kitchens, floors, constructionYear, roomCount, numParking;
     UUID landId;
     EnumSet<Zoning> zone;
     DetachedType isDetached;
@@ -206,6 +214,14 @@ class BuiltBlueprint extends Blueprints {
         this.lawn = lawn;
     }
 
+    public void setSize(double size) {
+        this.size = size;
+    }
+
+    public void setNumParking(int numParking) {
+        this.numParking = numParking;
+    }
+
     /**
      * runs the methods from the superclass with the variables set by the user, final because we do not want subclasses to inherit it
      *
@@ -218,6 +234,8 @@ class BuiltBlueprint extends Blueprints {
         livingUnitAttributes(isCoOp, isMultiFam, isMultiGen);
         typicalResidentialAttributes(squareFootage, floors, constructionYear, roomCount, bedrooms, bathrooms, kitchens, basement, deck);
         houseAttributes(attic, garden, lawn);
+        parkingAttribute(numParking);
+        lockerAttribute(size);
         return build();
     }
 }
