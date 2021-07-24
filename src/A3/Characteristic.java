@@ -1,7 +1,7 @@
 package A3;
 
 /**
- * The
+ * A wrapper class for each attribute of the MLS record
  *
  * @param <E> the data type of the characteristic
  */
@@ -26,7 +26,9 @@ class Characteristic<E> {
     }
 
     /**
-     * @return string repersentation of (name:value)
+     * String representation of the Characteristic
+     *
+     * @return string representation of (name:value)
      */
     @Override
     public String toString() {
@@ -34,6 +36,8 @@ class Characteristic<E> {
     }
 
     /**
+     * Check equality of one Characteristic to another
+     *
      * @param O object to be compared
      * @return weather or not the characteristics share a name (given they are both characteristics)
      */
