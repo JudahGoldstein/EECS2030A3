@@ -50,7 +50,7 @@ public class MlsDatabase {
         MlsDatabase.CollectionDisclaimer = CollectionDisclaimer;
     }
 
-    public MlsRecord searchCache(UUID uuid) {
+    public MlsRecord searchDatabase(UUID uuid) {
         return MlsDatabase.cache.get(uuid);
     }
 
@@ -70,7 +70,7 @@ public class MlsDatabase {
     }
 
     public MlsRecord deleteListing(UUID uuid) {
-        if (searchCache(uuid) != null) {
+        if (searchDatabase(uuid) != null) {
             MlsRecord deletedListing = MlsDatabase.cache.remove(uuid);
             return deletedListing; // if deleted
         }
