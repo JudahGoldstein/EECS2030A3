@@ -18,7 +18,7 @@ public class CharacteristicsList {
     }
 
     /**
-     * This method is used for the create and update operations
+     * This method is used for adding Characteristics to the list
      *
      * @param c characteristic to be added, will only add it if it has a unique name not in the set already
      *          and if there is a characteristic with the same name, then overwrite the old value with the new one.
@@ -36,6 +36,24 @@ public class CharacteristicsList {
             }
             characteristics.add(c);
             return this;
+        }
+        return this;
+    }
+
+    /**
+     * Update a record in the characteristics list.
+     *
+     * @param c characteristic to be updated, will only update the value if there is a characteristic with the same name.
+     * @return Type for fluid interface
+     */
+    public CharacteristicsList update(Characteristic<?> c) {
+        for (Characteristic<?> i : characteristics) {
+            if (c.equals(i)) {
+                int ind = characteristics.indexOf(i);
+                this.remove(i);
+                characteristics.add(ind, c); // take advantage of method overload in ArrayList
+                return this;
+            }
         }
         return this;
     }

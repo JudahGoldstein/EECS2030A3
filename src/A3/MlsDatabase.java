@@ -55,10 +55,10 @@ public class MlsDatabase {
     }
 
     /**
-     * Add a new entry or modify an existing entry in the cache, using a given key and value
+     * Add a new entry, using a given key and value.
      *
      * @param uuid    The UUID that will be the key for the entry
-     * @param listing The MultipleListingService that will be the value for the entry
+     * @param listing The MlsRecord that will be the value for the entry
      * @return        A boolean to inform the program whether the value was added or not
      */
     public boolean addListing(UUID uuid, MlsRecord listing) {
@@ -75,5 +75,20 @@ public class MlsDatabase {
             return deletedListing; // if deleted
         }
         return null; // if nothing deleted
+    }
+
+    /**
+     * Modify an existing entry, using a given key and value
+     *
+     * @param uuid    The UUID key to search for in the database
+     * @param listing The MlsRecord that will be the new value for the entry
+     * @return        A boolean to inform the program whether the value was modified or not
+     */
+    public boolean updateListing(UUID uuid, MlsRecord listing) {
+        if (searchDatabase(uuid) != null) {
+            MlsDatabase.database.put(uuid, listing);
+            return true; // if updated
+        }
+        return false; // if not found, therefore no changes made
     }
 }
