@@ -16,7 +16,7 @@ public class MlsRecord implements HighValuable {
         this.participants = participants;
         recordItems = new CharacteristicsList(uuid.toString());
         recordItems.add(new Characteristic<>(uuid.toString() + "-Property", listingObject));
-        recordItems.add(new Characteristic<>(uuid.toString() + "-Broker", broker));
+        recordItems.add(new Characteristic<>(uuid.toString() + "-Brokerage", broker));
         recordItems.add(new Characteristic<>(uuid.toString() + "-LastModified", modified));
         recordItems.add(new Characteristic<>(uuid.toString() + "-Disclaimer", disclaimer));
     }
@@ -27,6 +27,7 @@ public class MlsRecord implements HighValuable {
 
     public void setListingObject(Property listingObject) {
         recordItems.add(new Characteristic<>(uuid.toString() + "-Property", listingObject));
+        this.setLastModified(new Date());
     }
 
     public BusinessType getBroker() {
@@ -35,6 +36,7 @@ public class MlsRecord implements HighValuable {
 
     public void setBroker(BusinessType broker) {
         recordItems.add(new Characteristic<>(uuid.toString() + "-Broker", broker));
+        this.setLastModified(new Date());
     }
 
     public Set<SimpleParticipantType> getParticipants() {
@@ -43,10 +45,12 @@ public class MlsRecord implements HighValuable {
 
     public void setParticipants(Set<SimpleParticipantType> participants) {
         this.participants = participants;
+        this.setLastModified(new Date());
     }
 
     public void addParticipant(SimpleParticipantType participant) {
         this.participants.add(participant);
+        this.setLastModified(new Date());
     }
 
     public void removeParticipant(SimpleParticipantType participant) {
@@ -67,6 +71,7 @@ public class MlsRecord implements HighValuable {
 
     public void setDisclaimer(String disclaimer) {
         recordItems.add(new Characteristic<>(uuid.toString() + "-Disclaimer", disclaimer));
+        this.setLastModified(new Date());
     }
 
     /**
