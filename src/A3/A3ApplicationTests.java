@@ -572,5 +572,7 @@ class MlsDatabaseTests {
         d.deleteListing(m.getUUID());
 
         assertEquals(1, d.getSize(), EPSILON);
+
+        assertEquals("All information held in the database may not reflect the most up-to-date information.",MlsDatabase.getCollectionDisclaimer());
     }
 }

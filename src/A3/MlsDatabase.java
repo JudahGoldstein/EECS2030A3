@@ -11,7 +11,7 @@ import java.util.UUID;
 
 public class MlsDatabase {
     private static volatile MlsDatabase instance = null;
-    public static String CollectionDisclaimer;
+    public static final String CollectionDisclaimer = "All information held in the database may not reflect the most up-to-date information.";
 
     // the actual database component is a Map
     private static volatile Map<UUID, MlsRecord> database = null;
@@ -49,15 +49,6 @@ public class MlsDatabase {
      */
     public static String getCollectionDisclaimer() {
         return CollectionDisclaimer;
-    }
-
-    /**
-     * Set the MLS Database collection disclaimer
-     *
-     * @param CollectionDisclaimer collection disclaimer to be stored
-     */
-    public static void setCollectionDisclaimer(String CollectionDisclaimer) {
-        MlsDatabase.CollectionDisclaimer = CollectionDisclaimer;
     }
 
     /**
