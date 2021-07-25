@@ -152,7 +152,7 @@ class BuiltBlueprint extends Blueprints {
      * variables the builder will use
      */
     String address, description;
-    Double price, lotSize, squareFootage, size;
+    Double price, lotSize, squareFootage;
     Boolean isFreehold, canMove, isNewConstruct, isCoOp, isMultiFam, isMultiGen, attic, basement, deck, garden, lawn;
     Integer bedrooms, bathrooms, kitchens, floors, constructionYear, roomCount, numParking;
     UUID landId;
@@ -274,10 +274,6 @@ class BuiltBlueprint extends Blueprints {
         this.lawn = lawn;
     }
 
-    public void setSize(Double size) {
-        this.size = size;
-    }
-
     public void setNumParking(Integer numParking) {
         this.numParking = numParking;
     }
@@ -295,7 +291,7 @@ class BuiltBlueprint extends Blueprints {
         typicalResidentialAttributes(squareFootage, floors, constructionYear, roomCount, bedrooms, bathrooms, kitchens, basement, deck);
         houseAttributes(attic, garden, lawn);
         parkingAttribute(numParking);
-        lockerAttribute(size);
+        lockerAttribute(squareFootage);
         return build();
     }
 }

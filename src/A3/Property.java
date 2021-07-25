@@ -171,7 +171,7 @@ class Land extends Property {
     }
 }
 
-class Structure extends Land implements Movable, NewConstructable, Detachable {
+abstract class Structure extends Land implements Movable, NewConstructable, Detachable {
 
     /**
      * All structures must have the -Movable Boolean characteristic, -DetachedType EnumSet storing DetachedType enum values,
@@ -181,7 +181,7 @@ class Structure extends Land implements Movable, NewConstructable, Detachable {
      * @param characteristics the CharacteristicsList corresponding to the Property
      * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public Structure (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
+    Structure (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
         if(characteristics.getByName(name + "-Movable") == null) {
             missingInfo(name + "-Movable");
@@ -199,7 +199,7 @@ class Structure extends Land implements Movable, NewConstructable, Detachable {
      * @return whether or not the Structure can be moved
      */
     public Boolean getMovable() {
-        return (boolean) super.getCharacteristics().getByName(super.getName() + "-Movable").getValue();
+        return (Boolean) super.getCharacteristics().getByName(super.getName() + "-Movable").getValue();
     }
 
     /**
@@ -231,7 +231,7 @@ class Structure extends Land implements Movable, NewConstructable, Detachable {
      * @return whether this Structure is newly constructed or not
      */
     public Boolean getNewConstruct() {
-        return (boolean) super.getCharacteristics().getByName(super.getName() + "-NewConstruction").getValue();
+        return (Boolean) super.getCharacteristics().getByName(super.getName() + "-NewConstruction").getValue();
     }
 
     /**
@@ -243,14 +243,15 @@ class Structure extends Land implements Movable, NewConstructable, Detachable {
     }
 }
 
-class ImmobileStructure extends Structure {
+abstract class ImmobileNonLivingStructure extends Structure {
     /**
+     * Abstract class for immobile structures (such as parking spaces, lockers)
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
      * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public ImmobileStructure (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
+    ImmobileNonLivingStructure (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
         super.setMovable(false);
     }
@@ -264,8 +265,9 @@ class ImmobileStructure extends Structure {
     }
 }
 
-class ParkingSpace extends ImmobileStructure {
+class ParkingSpace extends ImmobileNonLivingStructure {
     /**
+     * Parking space should have the NumParkingSpaces Integer characteristic
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
@@ -273,11 +275,31 @@ class ParkingSpace extends ImmobileStructure {
      */
     public ParkingSpace (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
+        if(characteristics.getByName(name + "-NumParkingSpaces") == null) {
+            missingInfo(name + "-NumParkingSpaces");
+        }
+    }
+
+    /**
+     * Get the number of parking spaces
+     * @return the number of parking spaces
+     */
+    public Integer getNumParking() {
+        return (Integer) super.getCharacteristics().getByName(super.getName() + "-NumParkingSpaces").getValue();
+    }
+
+    /**
+     * Set the number of parking spaces
+     * @param newNumParking the number of parking spaces
+     */
+    public void setNumParking(Integer newNumParking) {
+        super.getCharacteristics().add(new Characteristic<>(super.getName() + "-NumParkingSpaces", newNumParking));
     }
 }
 
-class Locker extends ImmobileStructure {
+class Locker extends ImmobileNonLivingStructure {
     /**
+     * Locker should have a LockerSize Double characteristic
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
@@ -285,10 +307,29 @@ class Locker extends ImmobileStructure {
      */
     public Locker (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
+        if(characteristics.getByName(name + "-LockerSize") == null) {
+            missingInfo(name + "-LockerSize");
+        }
+    }
+
+    /**
+     * Get the locker size
+     * @return the locker size
+     */
+    public Double getLockerSize() {
+        return (Double) super.getCharacteristics().getByName(super.getName() + "-LockerSize").getValue();
+    }
+
+    /**
+     * Set the locker size
+     * @param newSize the locker size
+     */
+    public void setLockerSize(Double newSize) {
+        super.getCharacteristics().add(new Characteristic<>(super.getName() + "-LockerSize", newSize));
     }
 }
 
-class LivingUnit extends Structure implements Cooperable, MultiFamiliable, Multigenerationalable {
+abstract class LivingUnit extends Structure implements Cooperable, MultiFamiliable, Multigenerationalable {
 
     /**
      * All LivingUnits are automatically zoned as Residential
@@ -298,7 +339,7 @@ class LivingUnit extends Structure implements Cooperable, MultiFamiliable, Multi
      * @param characteristics the CharacteristicsList corresponding to the Property
      * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public LivingUnit (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
+    LivingUnit (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
         super.addZone(Zoning.RESIDENTIAL);
         if(characteristics.getByName(name + "-MultiFamilyType") == null) {

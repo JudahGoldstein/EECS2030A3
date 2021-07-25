@@ -161,11 +161,11 @@ class PropertyTests {
     String name = "AlwaysThisName";
     double testArea = 69420.1337;
     BuiltBlueprint a = new BuiltBlueprint(name);
+    UUID testUUID = UUID.randomUUID();
+    EnumSet<Zoning> testZones = EnumSet.noneOf(Zoning.class);
 
     @Test
     void LandTest() throws MissingCharacteristicException {
-        UUID testUUID = UUID.randomUUID();
-        EnumSet<Zoning> testZones = EnumSet.noneOf(Zoning.class);
         testZones.add(Zoning.RESIDENTIAL);
 
         a.setLandId(testUUID);
@@ -203,7 +203,51 @@ class PropertyTests {
     }
 
     @Test
-    void StructureTest() throws MissingCharacteristicException {
-        
+    void ImmobileStructureTest() throws MissingCharacteristicException {
+        a.setLandId(testUUID);
+        a.setZone(testZones);
+        a.setFreehold(false);
+        a.setLotSize(testArea);
+        a.setCanMove(false);
+        a.setNewConstruct(true);
+        a.setIsDetached(DetachedType.NOT_DETACHED);
+        assertThrows(MissingCharacteristicException.class, () -> new ParkingSpace(name, a.buildBlueprint()));
+        a.setNumParking(3);
+        ParkingSpace p = new ParkingSpace(name,a.buildBlueprint());
+        assertThrows(MissingCharacteristicException.class, () -> new Locker(name, a.buildBlueprint()));
+        a.setSquareFootage(15.5);
+        Locker b = new Locker(name,a.buildBlueprint());
+
+        assertEquals(3,p.getNumParking());
+        assertEquals(15.5,b.getLockerSize());
+
+        p.setNumParking(4932);
+        assertNotEquals(3,p.getNumParking());
+        b.setLockerSize(231.09);
+        assertNotEquals(15.5,b.getLockerSize());
     }
+    /*
+    @Test
+    void HouseTest() throws MissingCharacteristicException {
+        a.setLandId(testUUID);
+        a.setZone(testZones);
+        a.setFreehold(true);
+        a.setLotSize(testArea);
+        a.setCanMove(false);
+        a.setNewConstruct(true);
+        assertThrows(MissingCharacteristicException.class, () -> new House(name, a.buildBlueprint()));
+        a.setIsDetached(DetachedType.DEFAULT);
+        House b = new House(name, a.buildBlueprint());
+        assertEquals(false,b.getMovable());
+        assertEquals(true,b.getNewConstruct());
+        assertEquals(DetachedType.DETACHED.getDescription(),b.getDetachable().getDescription());
+
+        b.setMovable(true);
+        b.setNewConstruct(false);
+        b.setDetachable(DetachedType.SEMI_DETACHED);
+        assertNotEquals(false,b.getMovable());
+        assertNotEquals(true,b.getNewConstruct());
+        assertNotEquals(DetachedType.DETACHED.getDescription(),b.getDetachable().getDescription());
+    }
+    */
 }
