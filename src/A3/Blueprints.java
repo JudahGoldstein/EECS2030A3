@@ -86,7 +86,7 @@ public abstract class Blueprints extends CharacteristicsList {
      */
     void livingUnitAttributes(Boolean isCoOp, Boolean isMultiFam, Boolean isMultiGen) {
         super.add(new Characteristic<>(super.getName() + "-IsCoOpHousing", isCoOp));
-        super.add(new Characteristic<>(super.getName() + "-MultiFamilyType", isMultiFam));
+        super.add(new Characteristic<>(super.getName() + "-IsMultiFam", isMultiFam));
         super.add(new Characteristic<>(super.getName() + "-IsMultiGen", isMultiGen));
     }
 

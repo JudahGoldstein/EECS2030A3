@@ -342,8 +342,8 @@ abstract class LivingUnit extends Structure implements Cooperable, MultiFamiliab
     LivingUnit (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
         super.addZone(Zoning.RESIDENTIAL);
-        if(characteristics.getByName(name + "-MultiFamilyType") == null) {
-            missingInfo(name + "-MultiFamilyType");
+        if(characteristics.getByName(name + "-IsMultiFam") == null) {
+            missingInfo(name + "-IsMultiFam");
         }
         else if (characteristics.getByName(name + "-IsCoOpHousing") == null)  {
             missingInfo(name + "-IsCoOpHousing");
@@ -358,7 +358,7 @@ abstract class LivingUnit extends Structure implements Cooperable, MultiFamiliab
      * @return whether or not this LivingUnit is a Multi-Family living unit
      */
     public Boolean getMultiFamily() {
-        return (boolean) super.getCharacteristics().getByName(super.getName() + "-MultiFamilyType").getValue();
+        return (Boolean) super.getCharacteristics().getByName(super.getName() + "-IsMultiFam").getValue();
     }
 
     /**
@@ -366,7 +366,7 @@ abstract class LivingUnit extends Structure implements Cooperable, MultiFamiliab
      * @param isMultiFam whether or not this LivingUnit is a Multi-Family living unit
      */
     public void setMultiFamily(Boolean isMultiFam) {
-        super.getCharacteristics().add(new Characteristic<>(super.getName() + "-MultiFamilyType", isMultiFam));
+        super.getCharacteristics().add(new Characteristic<>(super.getName() + "-IsMultiFam", isMultiFam));
     }
 
     /**

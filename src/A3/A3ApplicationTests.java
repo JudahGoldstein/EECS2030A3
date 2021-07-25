@@ -177,7 +177,7 @@ class PropertyTests {
         Land b = new Land(name, a.buildBlueprint());
         assertEquals(testUUID, b.getLandId());
         assertEquals(testZones, b.getZone());
-        assertEquals(true, b.getFreeholdable());
+        assertTrue(b.getFreeholdable());
         assertEquals(testArea, b.getLotSize(), EPSILON);
 
         UUID newTestUUID = UUID.randomUUID();
@@ -188,6 +188,9 @@ class PropertyTests {
 
         b.setLotSize(3.0);
         assertNotEquals(testArea,b.getLotSize());
+
+        b.setFreeholdable(false);
+        assertFalse(b.getFreeholdable());
 
         EnumSet<Zoning> newTestZones = EnumSet.noneOf(Zoning.class);
         newTestZones.add(Zoning.COMMERCIAL);
@@ -204,6 +207,8 @@ class PropertyTests {
 
     @Test
     void ImmobileStructureTest() throws MissingCharacteristicException {
+        testZones.add(Zoning.COMMERCIAL);
+
         a.setLandId(testUUID);
         a.setZone(testZones);
         a.setFreehold(false);
@@ -225,29 +230,115 @@ class PropertyTests {
         assertNotEquals(3,p.getNumParking());
         b.setLockerSize(231.09);
         assertNotEquals(15.5,b.getLockerSize());
+
+        p.setMovable(true);
+        assertFalse(p.getMovable()); // overridden method doesn't allow the Movable characteristic to be changed from false
     }
-    /*
+
+    @Test
+    void CondominiumTest() throws MissingCharacteristicException {
+        initLivingUnit();
+        a.setIsDetached(DetachedType.NOT_DETACHED);
+        assertThrows(MissingCharacteristicException.class, () -> new Condominium(name, a.buildBlueprint()));
+        a.setCoOp(true);
+        Condominium b = new Condominium(name, a.buildBlueprint());
+        assertTrue(b.getZone().contains(Zoning.RESIDENTIAL)); // should be automatically added by the constructor of LivingUnit
+        assertFalse(b.getMovable());
+        assertTrue(b.getNewConstruct());
+        assertEquals(DetachedType.NOT_DETACHED.getDescription(),b.getDetachable().getDescription());
+        assertFalse(b.getMultiFamily());
+        assertFalse(b.getMultiGen());
+        assertTrue(b.getCoOp());
+
+        b.setMovable(true);
+        b.setNewConstruct(false);
+        b.setDetachable(DetachedType.SEMI_DETACHED);
+        b.setMultiFamily(true);
+        b.setMultiGen(true);
+        b.setCoOp(false);
+        assertNotEquals(true,b.getMovable()); // overridden method doesn't allow the Movable characteristic to be changed from false
+        assertNotEquals(true,b.getNewConstruct());
+        assertNotEquals(DetachedType.NOT_DETACHED.getDescription(),b.getDetachable().getDescription());
+        assertNotEquals(false,b.getMultiFamily());
+        assertNotEquals(false,b.getMultiGen());
+        assertNotEquals(true,b.getCoOp());
+    }
+
     @Test
     void HouseTest() throws MissingCharacteristicException {
+        initLivingUnit();
+        House b = new House(name, a.buildBlueprint());
+        assertEquals(false,b.getMovable());
+        assertEquals(DetachedType.DETACHED.getDescription(),b.getDetachable().getDescription());
+
+        b.setMovable(true);
+        assertNotEquals(false,b.getMovable()); // this method is not overridden in House
+    }
+
+    @Test
+    void ZonedHousingTest() throws MissingCharacteristicException {
+        initLivingUnit();
+        Farmhouse f = new Farmhouse(name, a.buildBlueprint());
+        assertEquals(2,f.getZone().size(),EPSILON);
+        assertTrue(f.getZone().contains(Zoning.AGRICULTURAL));
+        assertFalse(f.getZone().contains(Zoning.RECREATIONAL));
+
+        RecreationalHome r = new RecreationalHome(name, a.buildBlueprint());
+        assertEquals(2,r.getZone().size(),EPSILON);
+        assertTrue(f.getZone().contains(Zoning.RECREATIONAL));
+        assertFalse(f.getZone().contains(Zoning.AGRICULTURAL));
+
+        LiveWork w = new LiveWork(name, a.buildBlueprint());
+        assertEquals(2,w.getZone().size(),EPSILON);
+        assertTrue(f.getZone().contains(Zoning.COMMERCIAL));
+        assertFalse(f.getZone().contains(Zoning.INDUSTRIAL));
+    }
+
+    private void initLivingUnit() {
         a.setLandId(testUUID);
         a.setZone(testZones);
         a.setFreehold(true);
         a.setLotSize(testArea);
         a.setCanMove(false);
         a.setNewConstruct(true);
-        assertThrows(MissingCharacteristicException.class, () -> new House(name, a.buildBlueprint()));
         a.setIsDetached(DetachedType.DEFAULT);
-        House b = new House(name, a.buildBlueprint());
-        assertEquals(false,b.getMovable());
-        assertEquals(true,b.getNewConstruct());
-        assertEquals(DetachedType.DETACHED.getDescription(),b.getDetachable().getDescription());
-
-        b.setMovable(true);
-        b.setNewConstruct(false);
-        b.setDetachable(DetachedType.SEMI_DETACHED);
-        assertNotEquals(false,b.getMovable());
-        assertNotEquals(true,b.getNewConstruct());
-        assertNotEquals(DetachedType.DETACHED.getDescription(),b.getDetachable().getDescription());
+        a.setMultiFam(false);
+        a.setMultiGen(false);
+        a.setCoOp(false);
     }
-    */
+
+    @Test
+    void TownhouseTest() throws MissingCharacteristicException {
+        initLivingUnit();
+        Townhouse t = new Townhouse(name, a.buildBlueprint());
+        StackedTownhouse s = new StackedTownhouse(name, a.buildBlueprint());
+        TripleDecker d = new TripleDecker(name, a.buildBlueprint());
+
+        t.setMovable(true);
+        s.setMovable(true);
+        d.setMovable(true);
+        assertFalse(t.getMovable());
+        assertFalse(s.getMovable());
+        assertFalse(d.getMovable());
+    }
+
+    @Test
+    void MultilexTest() throws MissingCharacteristicException {
+        initLivingUnit();
+        Multilex duplex = new Multilex(name, a.buildBlueprint(), MultilexType.DUPLEX);
+        Multilex triplex = new Multilex(name, a.buildBlueprint(), MultilexType.TRIPLEX);
+        Multilex quadruplex = new Multilex(name, a.buildBlueprint(), MultilexType.QUADRUPLEX);
+
+        duplex.setMultiFamily(false);
+        assertTrue(duplex.getMultiFamily()); // overridden method doesn't allow the isMultiFam characteristic to be changed from false
+
+        assertEquals(MultilexType.DUPLEX.getDescription(),duplex.getMultiFamType().getDescription());
+        assertEquals(MultilexType.TRIPLEX.getDescription(),triplex.getMultiFamType().getDescription());
+        assertEquals(MultilexType.QUADRUPLEX.getDescription(),quadruplex.getMultiFamType().getDescription());
+        assertNotEquals(MultilexType.DEFAULT.getDescription(),quadruplex.getMultiFamType().getDescription());
+
+        Multilex testChange = duplex;
+        testChange.setMultiFamType(MultilexType.QUADRUPLEX);
+        assertEquals(quadruplex.getMultiFamType().getDescription(),testChange.getMultiFamType().getDescription());
+    }
 }
