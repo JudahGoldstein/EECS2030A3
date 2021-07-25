@@ -8,18 +8,38 @@ public abstract class Property implements Freeholdable {
     private String name;
 
     /**
+     * Property abstract class
+     * All properties must have the -IsFreehold Boolean characteristic
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
-     * @param characteristics the CharacteristicsList corresponding to the Property
+     * @param characteristics characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    Property (String name, CharacteristicsList characteristics) {
+    Property (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         this.name = name;
         this.characteristics = new CharacteristicsList(name);
+        boolean checkFreehold = false;
         for (Characteristic<?> i : characteristics.getCharacteristics()) {
             if (i.getValue() != null) {
                 this.characteristics.add(i);
             }
+            if (i.getName().contains("-IsFreehold")) {
+                checkFreehold = true;
+            }
         }
+        if (!checkFreehold) {
+            missingInfo(name + "-IsFreehold");
+        }
+    }
+
+    /**
+     * Error handling when a required Characteristic is missing
+     *
+     * @param message to indicate the name of the Characteristic that is missing
+     * @throws MissingCharacteristicException if a required Characteristic is missing from the CharacteristicsList
+     */
+    void missingInfo(String message) throws MissingCharacteristicException {
+        throw new MissingCharacteristicException("Missing " + message + " characteristic");
     }
 
     /**
@@ -59,12 +79,20 @@ class Land extends Property {
     // using an EnumSet for zoning makes this code compatible with multi-use zoning policies (such as that in Baltimore) https://sustainablecitycode.org/brief/mixed-use-zoning/
 
     /**
+     * All land must have the -LandId UUID characteristic and -Zoning EnumSet storing Zoning enum values
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public Land(String name, CharacteristicsList characteristics) {
+    public Land(String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name,characteristics);
+        if(characteristics.getByName(name + "-LandId") == null) {
+            missingInfo(name + "-LandId");
+        }
+        else if (characteristics.getByName(name + "-Zoning") == null)  {
+            missingInfo(name + "-Zoning");
+        }
     }
 
     /**
@@ -84,7 +112,9 @@ class Land extends Property {
     }
 
     /**
-     * Get the zoning of the land
+     * Get the zoning of the land.
+     * If for some reason the Zoning characteristic is missing, then it is added to the CharacteristicsList with an empty EnumSet.
+     *
      * @return the zoning(s) that apply to the land
      */
     public EnumSet<Zoning> getZone() {
@@ -141,13 +171,24 @@ class Land extends Property {
 class Structure extends Land implements Movable, NewConstructable, Detachable {
 
     /**
+     * All structures must have the -Movable Boolean characteristic, -DetachedType EnumSet storing DetachedType enum values,
+     * and the -NewConstruction Boolean characteristic
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public Structure (String name, CharacteristicsList characteristics) {
+    public Structure (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
-
+        if(characteristics.getByName(name + "-Movable") == null) {
+            missingInfo(name + "-Movable");
+        }
+        else if (characteristics.getByName(name + "-DetachedType") == null)  {
+            missingInfo(name + "-DetachedType");
+        }
+        else if (characteristics.getByName(name + "-NewConstruction") == null)  {
+            missingInfo(name + "-NewConstruction");
+        }
     }
 
     /**
@@ -204,8 +245,9 @@ class ImmobileStructure extends Structure {
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public ImmobileStructure (String name, CharacteristicsList characteristics) {
+    public ImmobileStructure (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
         super.setMovable(false);
     }
@@ -224,8 +266,9 @@ class ParkingSpace extends ImmobileStructure {
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public ParkingSpace (String name, CharacteristicsList characteristics) {
+    public ParkingSpace (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
     }
 }
@@ -235,8 +278,9 @@ class Locker extends ImmobileStructure {
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public Locker (String name, CharacteristicsList characteristics) {
+    public Locker (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
     }
 }
@@ -245,13 +289,24 @@ class LivingUnit extends Structure implements Cooperable, MultiFamiliable, Multi
 
     /**
      * All LivingUnits are automatically zoned as Residential
+     * All structures must have the -Movable, -IsCoOpHousing and -IsMultiGen Boolean characteristics
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public LivingUnit (String name, CharacteristicsList characteristics) {
+    public LivingUnit (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
         super.addZone(Zoning.RESIDENTIAL);
+        if(characteristics.getByName(name + "-MultiFamilyType") == null) {
+            missingInfo(name + "-MultiFamilyType");
+        }
+        else if (characteristics.getByName(name + "-IsCoOpHousing") == null)  {
+            missingInfo(name + "-IsCoOpHousing");
+        }
+        else if (characteristics.getByName(name + "-IsMultiGen") == null)  {
+            missingInfo(name + "-IsMultiGen");
+        }
     }
 
     /**
@@ -308,8 +363,9 @@ class Condominium extends LivingUnit {
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public Condominium (String name, CharacteristicsList characteristics) {
+    public Condominium (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
         super.setMovable(false);
     }
@@ -328,8 +384,9 @@ class House extends LivingUnit {
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public House (String name, CharacteristicsList characteristics) {
+    public House (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
     }
 }
@@ -340,8 +397,9 @@ class Farmhouse extends House {
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public Farmhouse (String name, CharacteristicsList characteristics) {
+    public Farmhouse (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
         super.addZone(Zoning.AGRICULTURAL);
     }
@@ -353,8 +411,9 @@ class RecreationalHome extends House {
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public RecreationalHome (String name, CharacteristicsList characteristics) {
+    public RecreationalHome (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
         super.addZone(Zoning.RECREATIONAL);
     }
@@ -366,8 +425,9 @@ class LiveWork extends House {
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public LiveWork (String name, CharacteristicsList characteristics) {
+    public LiveWork (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
         super.addZone(Zoning.COMMERCIAL);
     }
@@ -378,8 +438,9 @@ class Townhouse extends House {
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public Townhouse (String name, CharacteristicsList characteristics) {
+    public Townhouse (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
         super.setMovable(false);
     }
@@ -398,8 +459,9 @@ class StackedTownhouse extends Townhouse {
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public StackedTownhouse (String name, CharacteristicsList characteristics) {
+    public StackedTownhouse (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
     }
 }
@@ -409,8 +471,9 @@ class TripleDecker extends StackedTownhouse {
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public TripleDecker (String name, CharacteristicsList characteristics) {
+    public TripleDecker (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         super(name, characteristics);
     }
 }
@@ -420,12 +483,14 @@ class Multilex extends House {
 
     /**
      * Multilexes can have three different types: duplex, triplex, or quadruplex
+     * Note: this class requires the type of multilex as an argument for its constructor, unlike the other classes
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics the CharacteristicsList corresponding to the Property
      * @param multiFamType the type of multilex the property is
+     * @throws MissingCharacteristicException if a required characteristic is missing from the CharacteristicsList
      */
-    public Multilex(String name, CharacteristicsList characteristics, MultilexType multiFamType) {
+    public Multilex(String name, CharacteristicsList characteristics, MultilexType multiFamType) throws MissingCharacteristicException {
         super(name, characteristics);
         super.setMovable(false);
         super.setMultiFamily(true);

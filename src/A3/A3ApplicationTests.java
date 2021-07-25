@@ -3,8 +3,12 @@ package A3;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.UUID;
+
+import static org.junit.jupiter.api.Assertions.*;
 
 class CharacteristicTests {
     @Test
@@ -152,3 +156,25 @@ class SimpleParticipantTypeTests{
     }
 }
 
+class PropertyTests {
+    @Test
+    void LandTest() throws MissingCharacteristicException {
+        UUID testUUID = new UUID(32, 16);
+        EnumSet<Zoning> testZones = EnumSet.noneOf(Zoning.class);
+        testZones.add(Zoning.RESIDENTIAL);
+        BuiltBlueprint a = new BuiltBlueprint("a");
+        a.setLandId(testUUID);
+        a.setZone(testZones);
+        assertThrows(MissingCharacteristicException.class, () -> new Land("missingFreehold", a.buildBlueprint()));
+        a.setFreehold(true);
+        Land b = new Land("LandTest1",a.buildBlueprint());
+        assertEquals(testUUID, b.getLandId());
+        assertEquals(testZones, b.getZone());
+        assertEquals(true, b.getFreeholdable());
+    }
+
+    @Test
+    void StructureTest() throws MissingCharacteristicException {
+        
+    }
+}
