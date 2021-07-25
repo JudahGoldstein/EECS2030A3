@@ -3,6 +3,9 @@ package A3;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
+import java.util.HashSet;
+import java.util.Set;
+
 class CharacteristicTests {
     @Test
     void characteristicTypes() {
@@ -106,3 +109,46 @@ class BlueprintsTests {
         Assertions.assertEquals(a.buildBlueprint().toString(), "a:[(a-Address:address)(a-LotSize:96.024)(a-NumBathrooms:100)(a-HasBasement:false)]");
     }
 }
+
+class SimpleParticipantTypeTests{
+    SimpleParticipantType a = new SimpleParticipantType("id1","first","middle","last","role1","132-123-1234","132-123-1235","email@email.ca","132-123-1236","website.ca");
+
+    @Test
+    void SimpleParticipantTypeGetters(){
+        Assertions.assertEquals(a.getParticipantId(),"id1");
+        Assertions.assertEquals(a.getFirstName(),"first");
+        Assertions.assertEquals(a.getMiddleName(),"middle");
+        Assertions.assertEquals(a.getLastName(),"last");
+        Assertions.assertEquals(a.getRole(),"role1");
+        Assertions.assertEquals(a.getPrimaryContactPhone(),"132-123-1234");
+        Assertions.assertEquals(a.getOfficePhone(),"132-123-1235");
+        Assertions.assertEquals(a.getEmail(),"email@email.ca");
+        Assertions.assertEquals(a.getFax(),"132-123-1236");
+        Assertions.assertEquals(a.getWebsiteURL(),"website.ca");
+    }
+
+    @Test
+    void SimpleParticipantTypeSetters(){
+        a.setParticipantId("a");
+        a.setFirstName("b");
+        a.setMiddleName("c");
+        a.setLastName("d");
+        a.setRole("e");
+        a.setPrimaryContactPhone("f");
+        a.setOfficePhone("g");
+        a.setEmail("h");
+        a.setFax("i");
+        a.setWebsiteURL("j");
+        Assertions.assertEquals(a.getParticipantId(),"a");
+        Assertions.assertEquals(a.getFirstName(),"b");
+        Assertions.assertEquals(a.getMiddleName(),"c");
+        Assertions.assertEquals(a.getLastName(),"d");
+        Assertions.assertEquals(a.getRole(),"e");
+        Assertions.assertEquals(a.getPrimaryContactPhone(),"f");
+        Assertions.assertEquals(a.getOfficePhone(),"g");
+        Assertions.assertEquals(a.getEmail(),"h");
+        Assertions.assertEquals(a.getFax(),"i");
+        Assertions.assertEquals(a.getWebsiteURL(),"j");
+    }
+}
+

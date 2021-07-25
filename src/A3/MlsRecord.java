@@ -24,7 +24,7 @@ public class MlsRecord implements HighValuable {
      * @param disclaimer    a disclaimer
      */
     public MlsRecord(Property listingObject, BusinessType broker, Set<SimpleParticipantType> participants, Date modified, String disclaimer) {
-        this.uuid = new UUID(32, 16);
+        this.uuid = UUID.randomUUID();
         this.participants = participants;
         recordItems = new CharacteristicsList(uuid.toString());
         recordItems.add(new Characteristic<>(uuid.toString() + "-Property", listingObject));
@@ -153,9 +153,6 @@ public class MlsRecord implements HighValuable {
      */
     public boolean isHighValue() {
         Property listing = this.getListingObject();
-        if ((double) listing.getCharacteristics().getByName(listing.getName() + "-Price").getValue() >= HIGH_VALUE_LOWEST) {
-            return true;
-        }
-        return false;
+        return (double) listing.getCharacteristics().getByName(listing.getName() + "-Price").getValue() >= HIGH_VALUE_LOWEST;
     }
 }
