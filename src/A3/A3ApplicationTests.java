@@ -157,20 +157,49 @@ class SimpleParticipantTypeTests{
 }
 
 class PropertyTests {
+    final double EPSILON = 0.000001;
+    String name = "AlwaysThisName";
+    double testArea = 69420.1337;
+    BuiltBlueprint a = new BuiltBlueprint(name);
+
     @Test
     void LandTest() throws MissingCharacteristicException {
-        UUID testUUID = new UUID(32, 16);
+        UUID testUUID = UUID.randomUUID();
         EnumSet<Zoning> testZones = EnumSet.noneOf(Zoning.class);
         testZones.add(Zoning.RESIDENTIAL);
-        BuiltBlueprint a = new BuiltBlueprint("a");
+
         a.setLandId(testUUID);
         a.setZone(testZones);
-        assertThrows(MissingCharacteristicException.class, () -> new Land("missingFreehold", a.buildBlueprint()));
+        assertThrows(MissingCharacteristicException.class, () -> new Land(name, a.buildBlueprint()));
         a.setFreehold(true);
-        Land b = new Land("LandTest1",a.buildBlueprint());
+        assertThrows(MissingCharacteristicException.class, () -> new Land(name, a.buildBlueprint()));
+        a.setLotSize(testArea);
+        Land b = new Land(name, a.buildBlueprint());
         assertEquals(testUUID, b.getLandId());
         assertEquals(testZones, b.getZone());
         assertEquals(true, b.getFreeholdable());
+        assertEquals(testArea, b.getLotSize(), EPSILON);
+
+        UUID newTestUUID = UUID.randomUUID();
+        b.setLandId(newTestUUID);
+        String test = testUUID.toString();
+        String test2 = b.getLandId().toString();
+        assertNotEquals(testUUID.toString(), b.getLandId().toString());
+
+        b.setLotSize(3.0);
+        assertNotEquals(testArea,b.getLotSize());
+
+        EnumSet<Zoning> newTestZones = EnumSet.noneOf(Zoning.class);
+        newTestZones.add(Zoning.COMMERCIAL);
+        b.setZone(newTestZones);
+        assertNotEquals(testZones, b.getZone());
+
+        b.addZone(Zoning.RESIDENTIAL);
+        assertEquals(2,b.getZone().size(),EPSILON);
+        b.addZone(Zoning.RESIDENTIAL);
+        assertEquals(2,b.getZone().size(),EPSILON); // size shouldn't change because we used set - can't have repeated values
+        b.removeZone(Zoning.COMMERCIAL);
+        assertEquals(1,b.getZone().size(),EPSILON);
     }
 
     @Test

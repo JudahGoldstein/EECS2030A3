@@ -93,6 +93,9 @@ class Land extends Property {
         else if (characteristics.getByName(name + "-Zoning") == null)  {
             missingInfo(name + "-Zoning");
         }
+        else if (characteristics.getByName(name + "-LotSize") == null)  {
+            missingInfo(name + "-LotSize");
+        }
     }
 
     /**
