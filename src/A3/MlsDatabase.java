@@ -107,4 +107,12 @@ public class MlsDatabase {
         }
         return false; // if not found, therefore no changes made
     }
+
+    /**
+     * Get the current size of database
+     * @return the current size of database
+     */
+    public int getSize() {
+        return MlsDatabase.database.size();
+    }
 }

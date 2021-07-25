@@ -9,7 +9,8 @@ public abstract class Property implements Freeholdable {
 
     /**
      * Property abstract class
-     * All properties must have the -IsFreehold Boolean characteristic
+     * All properties must have the -IsFreehold Boolean, Address String, Price Double, ListingType Enum,
+     * and Description String characteristics
      *
      * @param name required name of A3.Characteristic for constructor and a cleaned version of the characteristic list to output
      * @param characteristics characteristics the CharacteristicsList corresponding to the Property
@@ -18,17 +19,25 @@ public abstract class Property implements Freeholdable {
     Property (String name, CharacteristicsList characteristics) throws MissingCharacteristicException {
         this.name = name;
         this.characteristics = new CharacteristicsList(name);
-        boolean checkFreehold = false;
         for (Characteristic<?> i : characteristics.getCharacteristics()) {
             if (i.getValue() != null) {
                 this.characteristics.add(i);
             }
-            if (i.getName().contains("-IsFreehold")) {
-                checkFreehold = true;
-            }
         }
-        if (!checkFreehold) {
+        if(characteristics.getByName(name + "-Address") == null) {
+            missingInfo(name + "-Address");
+        }
+        else if (characteristics.getByName(name + "-Price") == null)  {
+            missingInfo(name + "-Price");
+        }
+        else if (characteristics.getByName(name + "-ListingType") == null)  {
+            missingInfo(name + "-ListingType");
+        }
+        else if (characteristics.getByName(name + "-IsFreehold") == null)  {
             missingInfo(name + "-IsFreehold");
+        }
+        else if (characteristics.getByName(name + "-Description") == null)  {
+            missingInfo(name + "-Description");
         }
     }
 
@@ -72,6 +81,70 @@ public abstract class Property implements Freeholdable {
      */
     public void setFreeholdable(Boolean isFreehold) {
         this.characteristics.add(new Characteristic<>(name + "-IsFreehold", isFreehold));
+    }
+
+    /**
+     * Get the address of the property
+     * @return the address of the property
+     */
+    public String getAddress() {
+        return (String) characteristics.getByName(name + "-Address").getValue();
+    }
+
+    /**
+     * Set the address of the property
+     * @param newAddress the new address value to store
+     */
+    public void setAddress(String newAddress) {
+        this.characteristics.add(new Characteristic<>(name + "-Address", newAddress));
+    }
+
+    /**
+     * Get the description of the property
+     * @return the description of the property
+     */
+    public String getDescription() {
+        return (String) characteristics.getByName(name + "-Description").getValue();
+    }
+
+    /**
+     * Set the description of the property
+     * @param newDesc the new description value to store
+     */
+    public void setDescription(String newDesc) {
+        this.characteristics.add(new Characteristic<>(name + "-Description", newDesc));
+    }
+
+    /**
+     * Get the listing price of the property
+     * @return the listing price of the property
+     */
+    public Double getPrice() {
+        return (Double) characteristics.getByName(name + "-Price").getValue();
+    }
+
+    /**
+     * Set the listing price of the property
+     * @param newPrice the new listing price value to store
+     */
+    public void setPrice(Double newPrice) {
+        this.characteristics.add(new Characteristic<>(name + "-Price", newPrice));
+    }
+
+    /**
+     * Get the listing type of the property
+     * @return the listing type of the property
+     */
+    public ListingCategory getListingType() {
+        return (ListingCategory) characteristics.getByName(name + "-ListingType").getValue();
+    }
+
+    /**
+     * Set the listing type of the property
+     * @param newCat the new listing type value to store
+     */
+    public void setListingType(ListingCategory newCat) {
+        this.characteristics.add(new Characteristic<>(name + "-ListingType", newCat));
     }
 }
 

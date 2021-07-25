@@ -3,10 +3,7 @@ package A3;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -159,6 +156,7 @@ class SimpleParticipantTypeTests{
 class PropertyTests {
     final double EPSILON = 0.000001;
     String name = "AlwaysThisName";
+    String address = "123 Apple Street";
     double testArea = 69420.1337;
     BuiltBlueprint a = new BuiltBlueprint(name);
     UUID testUUID = UUID.randomUUID();
@@ -168,6 +166,10 @@ class PropertyTests {
     void LandTest() throws MissingCharacteristicException {
         testZones.add(Zoning.RESIDENTIAL);
 
+        a.setAddress(address);
+        a.setPrice(5678.90);
+        a.setDescription("Test House");
+        a.setListingType(ListingCategory.DEFAULT);
         a.setLandId(testUUID);
         a.setZone(testZones);
         assertThrows(MissingCharacteristicException.class, () -> new Land(name, a.buildBlueprint()));
@@ -175,22 +177,36 @@ class PropertyTests {
         assertThrows(MissingCharacteristicException.class, () -> new Land(name, a.buildBlueprint()));
         a.setLotSize(testArea);
         Land b = new Land(name, a.buildBlueprint());
+
+        assertEquals(address, b.getAddress());
+        assertEquals(5678.90, b.getPrice(), EPSILON);
+        assertEquals("Test House", b.getDescription());
+        assertEquals(ListingCategory.PURCHASE.getDescription(), b.getListingType().getDescription());
+        assertTrue(b.getFreeholdable());
         assertEquals(testUUID, b.getLandId());
         assertEquals(testZones, b.getZone());
-        assertTrue(b.getFreeholdable());
         assertEquals(testArea, b.getLotSize(), EPSILON);
+
+        b.setAddress("123 Pear Court");
+        b.setPrice(123.21);
+        b.setListingType(ListingCategory.RENT);
+        b.setDescription("Clown House");
+        b.setFreeholdable(false);
+
+        assertNotEquals(address, b.getAddress());
+        assertNotEquals(5678.90, b.getPrice(), EPSILON);
+        assertNotEquals("Test House", b.getDescription());
+        assertNotEquals(ListingCategory.PURCHASE.getDescription(), b.getListingType().getDescription());
+        assertFalse(b.getFreeholdable());
 
         UUID newTestUUID = UUID.randomUUID();
         b.setLandId(newTestUUID);
-        String test = testUUID.toString();
-        String test2 = b.getLandId().toString();
         assertNotEquals(testUUID.toString(), b.getLandId().toString());
 
         b.setLotSize(3.0);
         assertNotEquals(testArea,b.getLotSize());
 
-        b.setFreeholdable(false);
-        assertFalse(b.getFreeholdable());
+
 
         EnumSet<Zoning> newTestZones = EnumSet.noneOf(Zoning.class);
         newTestZones.add(Zoning.COMMERCIAL);
@@ -295,9 +311,13 @@ class PropertyTests {
     }
 
     private void initLivingUnit() {
+        a.setAddress(address);
+        a.setPrice(5678.90);
+        a.setDescription("Test House");
+        a.setListingType(ListingCategory.DEFAULT);
+        a.setFreehold(true);
         a.setLandId(testUUID);
         a.setZone(testZones);
-        a.setFreehold(true);
         a.setLotSize(testArea);
         a.setCanMove(false);
         a.setNewConstruct(true);
@@ -340,5 +360,217 @@ class PropertyTests {
         Multilex testChange = duplex;
         testChange.setMultiFamType(MultilexType.QUADRUPLEX);
         assertEquals(quadruplex.getMultiFamType().getDescription(),testChange.getMultiFamType().getDescription());
+    }
+
+    @Test
+    void addMoreCharacteristics() throws MissingCharacteristicException {
+        initLivingUnit();
+        House test = new House(name, a.buildBlueprint());
+        Characteristic<Integer> z = new Characteristic<Integer>(name + "-RoomCount",9);
+        Characteristic<Boolean> b = new Characteristic<Boolean>(name + "-HasAttic",true);
+        Characteristic<Integer> c = new Characteristic<Integer>(name + "-NumBedrooms",3);
+        Characteristic<Integer> d = new Characteristic<Integer>(name + "-NumBathrooms",2);
+        Characteristic<Integer> e = new Characteristic<Integer>(name + "-NumKitchens",15);
+        Characteristic<Integer> f = new Characteristic<Integer>(name + "-Floors",5);
+        Characteristic<Integer> g = new Characteristic<Integer>(name + "-YearConstructed",1492);
+        Characteristic<Boolean> h = new Characteristic<Boolean>(name + "-HasGarden",true);
+        Characteristic<Boolean> i = new Characteristic<Boolean>(name + "-HasLawn",true);
+
+        test.getCharacteristics().add(z);
+        test.getCharacteristics().add(b);
+        test.getCharacteristics().add(c);
+        test.getCharacteristics().add(d);
+        test.getCharacteristics().add(e);
+        test.getCharacteristics().add(f);
+        test.getCharacteristics().add(g);
+        test.getCharacteristics().add(h);
+        test.getCharacteristics().add(i);
+
+        String result = test.getCharacteristics().toString();
+        String compareWith =
+                name + ":[(" + name + "-Address:" + address  + ")("
+                             + name + "-Price:" + 5678.9 + ")("
+                             + name + "-ListingType:DEFAULT)("
+                             + name + "-IsFreehold:true)("
+                             + name + "-Description:Test House)("
+                             + name + "-LandId:" + testUUID.toString() + ")("
+                             + name + "-Zoning:[RESIDENTIAL])("
+                             + name + "-LotSize:" + 69420.1337 + ")("
+                             + name + "-Movable:false)("
+                             + name + "-NewConstruction:true)("
+                             + name + "-DetachedType:DEFAULT)("
+                             + name + "-IsCoOpHousing:false)("
+                             + name + "-IsMultiFam:false)("
+                             + name + "-IsMultiGen:false)("
+                             + name + "-RoomCount:9)("
+                             + name + "-HasAttic:true)("
+                             + name + "-NumBedrooms:3)("
+                             + name + "-NumBathrooms:2)("
+                             + name + "-NumKitchens:15)("
+                             + name + "-Floors:5)("
+                             + name + "-YearConstructed:1492)("
+                             + name + "-HasGarden:true)("
+                             + name + "-HasLawn:true)]";
+
+        assertEquals(compareWith, result);
+    }
+}
+
+class MlsRecordTests {
+    final double EPSILON = 0.000001;
+    String name = "AlwaysThisName";
+    String address = "123 Apple Street";
+    double testArea = 69420.1337;
+    BuiltBlueprint a = new BuiltBlueprint(name);
+    UUID testUUID = UUID.randomUUID();
+    EnumSet<Zoning> testZones = EnumSet.noneOf(Zoning.class);
+    String disclaimer = "This may not reflect the most up-to-date information.";
+
+    SimpleParticipantType p = new SimpleParticipantType("id1","first","middle","last","role1","132-123-1234","132-123-1235","email@email.ca","132-123-1236","website.ca");
+    SimpleParticipantType q = new SimpleParticipantType("a", "b", "c", "d", "e","f", "g", "h","i","j");
+    BusinessType broker = new BusinessType("a", "b", "c", "d", "e","f", "g", "h");
+    BusinessType broker2 = new BusinessType("id1","first","middle","last","role1","132-123-1234","132-123-1235","email@email.ca");
+
+    Set<SimpleParticipantType> people = new HashSet<SimpleParticipantType>();
+
+    @Test
+    void CreateOneRecord() throws MissingCharacteristicException {
+        testZones.add(Zoning.RESIDENTIAL);
+        people.add(p);
+
+        a.setAddress(address);
+        a.setPrice(5678.90);
+        a.setDescription("Test House");
+        a.setListingType(ListingCategory.DEFAULT);
+        a.setFreehold(true);
+        a.setLandId(testUUID);
+        a.setZone(testZones);
+        a.setLotSize(testArea);
+        a.setCanMove(false);
+        a.setNewConstruct(true);
+        a.setIsDetached(DetachedType.DEFAULT);
+        a.setMultiFam(false);
+        a.setMultiGen(false);
+        a.setCoOp(false);
+
+        House h = new House(name, a.buildBlueprint());
+
+        MlsRecord m = new MlsRecord(h, broker, people, new Date(), disclaimer);
+        Date startTest = m.getLastModified();
+
+        assertEquals(h.getCharacteristics().toString(), m.getListingObject().getCharacteristics().toString());
+        assertEquals(broker.getName(),m.getBroker().getName());
+        assertEquals(1, m.getParticipants().size());
+        assertEquals(disclaimer,m.getDisclaimer());
+
+        m.setBroker(broker2);
+        m.addParticipant(q);
+        assertEquals(2, m.getParticipants().size());
+        m.addParticipant(q);
+        assertEquals(2, m.getParticipants().size());
+        m.removeParticipant(p);
+        assertEquals(1, m.getParticipants().size());
+        m.setDisclaimer("Friend");
+        Date endTest = new Date();
+        assertEquals(endTest.compareTo(startTest),m.getLastModified().compareTo(startTest),EPSILON);
+        assertNotEquals(disclaimer,m.getDisclaimer());
+        assertFalse(m.isHighValue());
+        h.getCharacteristics().update(new Characteristic<>(h.getName() + "-Price",5000000.25));
+        assertTrue(m.isHighValue());
+    }
+}
+
+class MlsDatabaseTests {
+    final double EPSILON = 0.000001;
+    String name = "AlwaysThisName";
+    String address = "123 Apple Street";
+    double testArea = 69420.1337;
+    BuiltBlueprint a = new BuiltBlueprint(name);
+    UUID testUUID = UUID.randomUUID();
+    EnumSet<Zoning> testZones = EnumSet.noneOf(Zoning.class);
+    String disclaimer = "This may not reflect the most up-to-date information.";
+
+    SimpleParticipantType p = new SimpleParticipantType("id1","first","middle","last","role1","132-123-1234","132-123-1235","email@email.ca","132-123-1236","website.ca");
+    SimpleParticipantType q = new SimpleParticipantType("a", "b", "c", "d", "e","f", "g", "h","i","j");
+    BusinessType broker = new BusinessType("a", "b", "c", "d", "e","f", "g", "h");
+    BusinessType broker2 = new BusinessType("id1","first","middle","last","role1","132-123-1234","132-123-1235","email@email.ca");
+
+    Set<SimpleParticipantType> people = new HashSet<SimpleParticipantType>();
+    Set<SimpleParticipantType> people2 = new HashSet<SimpleParticipantType>();
+
+    @Test
+    void testDatabase() throws MissingCharacteristicException {
+        testZones.add(Zoning.RESIDENTIAL);
+        people.add(p);
+        people2.add(q);
+
+        a.setAddress(address);
+        a.setPrice(5678.90);
+        a.setDescription("Test House");
+        a.setListingType(ListingCategory.DEFAULT);
+        a.setFreehold(true);
+        a.setLandId(testUUID);
+        a.setZone(testZones);
+        a.setLotSize(testArea);
+        a.setCanMove(false);
+        a.setNewConstruct(true);
+        a.setIsDetached(DetachedType.DEFAULT);
+        a.setMultiFam(false);
+        a.setMultiGen(false);
+        a.setCoOp(false);
+
+        House h = new House(name, a.buildBlueprint());
+
+        MlsRecord m = new MlsRecord(h, broker, people, new Date(), disclaimer);
+
+        BuiltBlueprint b = new BuiltBlueprint("another");
+        UUID testUUIDTwo = UUID.randomUUID();
+        EnumSet<Zoning> testZonesTwo = EnumSet.noneOf(Zoning.class);
+        testZonesTwo.add(Zoning.RESIDENTIAL);
+
+        b.setAddress(address);
+        b.setPrice(5000000.34);
+        b.setDescription("Another Test House");
+        b.setListingType(ListingCategory.LEASE);
+        b.setFreehold(false);
+        b.setLandId(testUUIDTwo);
+        b.setZone(testZonesTwo);
+        b.setLotSize(56034.2);
+        b.setCanMove(false);
+        b.setNewConstruct(true);
+        b.setIsDetached(DetachedType.NOT_DETACHED);
+        b.setNumParking(3);
+
+        ParkingSpace p = new ParkingSpace("another",b.buildBlueprint());
+
+        MlsRecord n = new MlsRecord(p, broker2, people, new Date(), disclaimer);
+
+        MlsDatabase d = MlsDatabase.getInstance();
+
+        assertEquals(0,d.getSize(), EPSILON);
+
+        d.addListing(m.getUUID(), m);
+
+        assertEquals(1,d.getSize(), EPSILON);
+
+        d.addListing(n.getUUID(), n);
+
+        assertEquals(2, d.getSize(), EPSILON);
+
+        b.setSquareFootage(67.0);
+
+        Locker l = new Locker("another",b.buildBlueprint());
+
+        n.setListingObject(l);
+
+        d.updateListing(n.getUUID(),n);
+
+        assertEquals(2, d.getSize(), EPSILON);
+
+        assertEquals(m.getDisclaimer(),d.searchDatabase(m.getUUID()).getDisclaimer());
+
+        d.deleteListing(m.getUUID());
+
+        assertEquals(1, d.getSize(), EPSILON);
     }
 }

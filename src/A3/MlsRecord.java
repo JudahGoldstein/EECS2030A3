@@ -55,7 +55,7 @@ public class MlsRecord implements HighValuable {
      * @return the stored Brokerage
      */
     public BusinessType getBroker() {
-        return (BusinessType) recordItems.getByName(uuid.toString() + "-Broker").getValue();
+        return (BusinessType) recordItems.getByName(uuid.toString() + "-Brokerage").getValue();
     }
 
     /**
@@ -63,7 +63,7 @@ public class MlsRecord implements HighValuable {
      * @param broker the Brokerage to be stored
      */
     public void setBroker(BusinessType broker) {
-        recordItems.add(new Characteristic<>(uuid.toString() + "-Broker", broker));
+        recordItems.add(new Characteristic<>(uuid.toString() + "-Brokerage", broker));
         this.setLastModified(new Date());
     }
 
