@@ -42,15 +42,15 @@ public abstract class Property implements Freeholdable {
      * Get whether or not this Property is a freehold
      * @return whether or not this Property is a freehold
      */
-    public boolean getFreeholdable() {
-        return (boolean) characteristics.getByName(name + "-IsFreehold").getValue();
+    public Boolean getFreeholdable() {
+        return (Boolean) characteristics.getByName(name + "-IsFreehold").getValue();
     }
 
     /**
      * Set whether or not this Property is a freehold
      * @param isFreehold whether or not this Property is a freehold
      */
-    public void setFreeholdable(boolean isFreehold) {
+    public void setFreeholdable(Boolean isFreehold) {
         this.characteristics.add(new Characteristic<>(name + "-IsFreehold", isFreehold));
     }
 }
@@ -125,15 +125,15 @@ class Land extends Property {
      * Get the size of the lot
      * @return the size of the lot
      */
-    public double getLotSize() {
-        return (double) super.getCharacteristics().getByName(super.getName() + "-LotSize").getValue();
+    public Double getLotSize() {
+        return (Double) super.getCharacteristics().getByName(super.getName() + "-LotSize").getValue();
     }
 
     /**
      * Set the size of the lot
      * @param area the size of the lot
      */
-    public void setLotSize(double area) {
+    public void setLotSize(Double area) {
         super.getCharacteristics().add(new Characteristic<>(super.getName() + "-LotSize", area));
     }
 }
@@ -154,7 +154,7 @@ class Structure extends Land implements Movable, NewConstructable, Detachable {
      * Get whether or not the Structure can be moved
      * @return whether or not the Structure can be moved
      */
-    public boolean getMovable() {
+    public Boolean getMovable() {
         return (boolean) super.getCharacteristics().getByName(super.getName() + "-Movable").getValue();
     }
 
@@ -170,7 +170,7 @@ class Structure extends Land implements Movable, NewConstructable, Detachable {
      * Set whether or not the Structure can be moved
      * @param canMove whether or not the Structure can be moved
      */
-    public void setMovable(boolean canMove) {
+    public void setMovable(Boolean canMove) {
         super.getCharacteristics().add(new Characteristic<>(super.getName() + "-Movable", canMove));
     }
 
@@ -186,7 +186,7 @@ class Structure extends Land implements Movable, NewConstructable, Detachable {
      * Get whether this Structure is newly constructed or not
      * @return whether this Structure is newly constructed or not
      */
-    public boolean getNewConstruct() {
+    public Boolean getNewConstruct() {
         return (boolean) super.getCharacteristics().getByName(super.getName() + "-NewConstruction").getValue();
     }
 
@@ -194,7 +194,7 @@ class Structure extends Land implements Movable, NewConstructable, Detachable {
      * Set whether this Structure is newly constructed or not
      * @param newConstruct whether this Structure is newly constructed or not
      */
-    public void setNewConstruct(boolean newConstruct) {
+    public void setNewConstruct(Boolean newConstruct) {
         super.getCharacteristics().add(new Characteristic<>(super.getName() + "-NewConstruction", newConstruct));
     }
 }
@@ -215,7 +215,7 @@ class ImmobileStructure extends Structure {
      * @param canMove whether or not the Structure can be moved
      */
     @Override
-    public void setMovable(boolean canMove) {
+    public void setMovable(Boolean canMove) {
     }
 }
 
@@ -258,7 +258,7 @@ class LivingUnit extends Structure implements Cooperable, MultiFamiliable, Multi
      * Get whether or not this LivingUnit is a Multi-Family living unit
      * @return whether or not this LivingUnit is a Multi-Family living unit
      */
-    public boolean getMultiFamily() {
+    public Boolean getMultiFamily() {
         return (boolean) super.getCharacteristics().getByName(super.getName() + "-MultiFamilyType").getValue();
     }
 
@@ -266,7 +266,7 @@ class LivingUnit extends Structure implements Cooperable, MultiFamiliable, Multi
      * Set whether or not this LivingUnit is a Multi-Family living unit
      * @param isMultiFam whether or not this LivingUnit is a Multi-Family living unit
      */
-    public void setMultiFamily(boolean isMultiFam) {
+    public void setMultiFamily(Boolean isMultiFam) {
         super.getCharacteristics().add(new Characteristic<>(super.getName() + "-MultiFamilyType", isMultiFam));
     }
 
@@ -274,7 +274,7 @@ class LivingUnit extends Structure implements Cooperable, MultiFamiliable, Multi
      * Set whether or not this LivingUnit is co-operative housing
      * @param isCoOp whether or not this LivingUnit is co-operative housing
      */
-    public void setCoOp(boolean isCoOp) {
+    public void setCoOp(Boolean isCoOp) {
         super.getCharacteristics().add(new Characteristic<>(super.getName() + "-IsCoOpHousing", isCoOp));
     }
 
@@ -282,23 +282,23 @@ class LivingUnit extends Structure implements Cooperable, MultiFamiliable, Multi
      * Get whether or not this LivingUnit is co-operative housing
      * @return whether or not this LivingUnit is co-operative housing
      */
-    public boolean getCoOp() {
-        return (boolean) super.getCharacteristics().getByName(super.getName() + "-IsCoOpHousing").getValue();
+    public Boolean getCoOp() {
+        return (Boolean) super.getCharacteristics().getByName(super.getName() + "-IsCoOpHousing").getValue();
     }
 
     /**
      * Get whether or not this LivingUnit is a multi-generational home
      * @return whether or not this LivingUnit is a multi-generational home
      */
-    public boolean getMultiGen() {
-        return (boolean) super.getCharacteristics().getByName(super.getName() + "-IsMultiGen").getValue();
+    public Boolean getMultiGen() {
+        return (Boolean) super.getCharacteristics().getByName(super.getName() + "-IsMultiGen").getValue();
     }
 
     /**
      * Set whether or not this LivingUnit is a multi-generational home
      * @param isMultiGen whether or not this LivingUnit is a multi-generational home
      */
-    public void setMultiGen(boolean isMultiGen) {
+    public void setMultiGen(Boolean isMultiGen) {
         super.getCharacteristics().add(new Characteristic<>(super.getName() + "-IsMultiGen", isMultiGen));
     }
 }
@@ -319,7 +319,7 @@ class Condominium extends LivingUnit {
      * @param canMove whether or not the Structure can be moved
      */
     @Override
-    public void setMovable(boolean canMove) {
+    public void setMovable(Boolean canMove) {
     }
 }
 
@@ -389,7 +389,7 @@ class Townhouse extends House {
      * @param canMove whether or not the Structure can be moved
      */
     @Override
-    public void setMovable(boolean canMove) {
+    public void setMovable(Boolean canMove) {
     }
 }
 
@@ -438,7 +438,7 @@ class Multilex extends House {
      * @param isMultiFam whether or not this LivingUnit is a Multi-Family living unit
      */
     @Override
-    public void setMultiFamily(boolean isMultiFam) {
+    public void setMultiFamily(Boolean isMultiFam) {
 
     }
 
@@ -447,7 +447,7 @@ class Multilex extends House {
      * @param canMove whether or not the Structure can be moved
      */
     @Override
-    public void setMovable(boolean canMove) {
+    public void setMovable(Boolean canMove) {
     }
 
 

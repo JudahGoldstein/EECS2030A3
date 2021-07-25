@@ -1,6 +1,6 @@
 package A3;
 
 public interface Cooperable {
-    public boolean getCoOp();
-    public void setCoOp(boolean isCoOp);
+    public Boolean getCoOp();
+    public void setCoOp(Boolean isCoOp);
 }
